@@ -1,0 +1,102 @@
+{
+    "name": "CAVEConfig",
+    "maps": [
+        {
+            "name": "CAVETrackedBodies",
+            "id": "8d34dbfe-00cc-4457-b7e6-a2af7c80c21f",
+            "actions": [
+                {
+                    "name": "LeftHandPosition",
+                    "type": "Value",
+                    "id": "d2ee2539-2581-4b9c-879e-0eb4357270fa",
+                    "expectedControlType": "Vector3",
+                    "processors": "InvertVector3(invertX=false,invertY=false)",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "LeftHandRotation",
+                    "type": "Value",
+                    "id": "0ee03eb8-d006-4ab9-a489-ca9b4fdee061",
+                    "expectedControlType": "Quaternion",
+                    "processors": "InvertQuaternionRotationInput(invertZ=false)",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "HeadPosition",
+                    "type": "Value",
+                    "id": "4e150af1-b451-4d6c-ae8d-d33e9e197570",
+                    "expectedControlType": "Vector3",
+                    "processors": "InvertVector3(invertX=false,invertY=false)",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "HeadRotation",
+                    "type": "Value",
+                    "id": "04ce6cf2-c12a-43aa-a366-46230f4a0cc6",
+                    "expectedControlType": "Quaternion",
+                    "processors": "InvertQuaternionRotationInput(invertZ=false)",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "RightHandPosition",
+                    "type": "Value",
+                    "id": "dea6f4a0-72d1-48ce-8035-2a8625082403",
+                    "expectedControlType": "Vector3",
+                    "processors": "InvertVector3(invertX=false,invertY=false)",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "RightHandRotation",
+                    "type": "Value",
+                    "id": "b91330da-765b-4f65-a0a5-70fb327967cc",
+                    "expectedControlType": "Quaternion",
+                    "processors": "InvertQuaternionRotationInput(invertZ=false)",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "759e4f5e-c7e9-45b3-8666-a935bfe3820e",
+                    "path": "HMD/deviceRotation",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "HeadRotation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c3a70caf-801d-40dd-a133-e116f8b02079",
+                    "path": "HMD/devicePosition",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "HeadPosition",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": [
+        {
+            "name": "Workbench",
+            "bindingGroup": "Workbench",
+            "devices": [
+                {
+                    "devicePath": "<VrpnTracker>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
+        }
+    ]
+}
