@@ -1,0 +1,55 @@
+{
+    "version": 1,
+    "name": "CesiumCaveInput",
+    "maps": [
+        {
+            "name": "CAVE",
+            "id": "21de0bcf-bc05-4054-b7c3-ce4eff6c12e8",
+            "actions": [
+                {
+                    "name": "Move",
+                    "type": "Value",
+                    "id": "5e461270-5c9b-4959-90dc-ca077b021f35",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Rotate",
+                    "type": "Value",
+                    "id": "b7779049-d16e-4193-9a82-140c6049f8f8",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "329f933b-ec44-4df8-9cf9-74b8fbbce371",
+                    "path": "<SwitchJoyConLHID>/leftStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "926b01de-cbf5-48f1-8eec-7c759963ea64",
+                    "path": "<SwitchJoyConRHID>/rightStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Rotate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
