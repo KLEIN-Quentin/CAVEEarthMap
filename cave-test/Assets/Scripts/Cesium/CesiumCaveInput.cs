@@ -28,14 +28,15 @@ public class CesiumCaveInput : MonoBehaviour
 
     private void ApplyMove()
     {
-        CAVE.transform.localPosition += new Vector3(moveInputs.x, moveInputs.y);
+        CAVE.transform.localPosition += new Vector3(moveInputs.x, 0, moveInputs.y);
         moveInputs = Vector2.zero;
     }
 
     private void ApplyRotate()
     {
-        CAVE.transform.Rotate(new Vector3(rotateInputs.x, rotateInputs.y));
+        CAVE.transform.Rotate(new Vector3(rotateInputs.y, rotateInputs.x, 0));
         rotateInputs = Vector2.zero;
+        CAVE.transform.Rotate(Vector3.zero);
     }
 
 }
