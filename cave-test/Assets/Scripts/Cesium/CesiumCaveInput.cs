@@ -28,7 +28,7 @@ public class CesiumCaveInput : MonoBehaviour
 
     private void ApplyMove()
     {
-        CAVE.transform.localPosition += new Vector3(moveInputs.x, 0, moveInputs.y);
+        CAVE.transform.localPosition += new Vector3(moveInputs.x / 2, 0, moveInputs.y / 2);
         moveInputs = Vector2.zero;
     }
 
