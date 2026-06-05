@@ -11,7 +11,7 @@
                     "type": "Value",
                     "id": "5e461270-5c9b-4959-90dc-ca077b021f35",
                     "expectedControlType": "Vector2",
-                    "processors": "",
+                    "processors": "StickDeadzone",
                     "interactions": "",
                     "initialStateCheck": true
                 },
@@ -42,7 +42,7 @@
                     "id": "926b01de-cbf5-48f1-8eec-7c759963ea64",
                     "path": "<SwitchJoyConRHID>/rightStick",
                     "interactions": "",
-                    "processors": "",
+                    "processors": "StickDeadzone",
                     "groups": "",
                     "action": "Rotate",
                     "isComposite": false,
