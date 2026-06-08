@@ -19,6 +19,11 @@ public class CesiumCaveInput : MonoBehaviour
     [SerializeField]
     private Transform leftHand;
 
+    [SerializeField]
+    private GameObject mainCam;
+    [SerializeField]
+    private Transform initialCamPosition;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -30,6 +35,7 @@ public class CesiumCaveInput : MonoBehaviour
     {
         ApplyMove();
         ApplyRotate();
+        SaveCamera();
     }
     
     public void OnMove(InputAction.CallbackContext context)
@@ -60,7 +66,7 @@ public class CesiumCaveInput : MonoBehaviour
         //CAVE.transform.localPosition += new Vector3(moveInputs.x / 2, 0, moveInputs.y / 2);
         //moveInputs = Vector2.zero;
         Vector3 moveDirection = leftHand.right * moveInputs.x + leftHand.forward * moveInputs.y;
-        moveDirection *= 4f;
+        moveDirection *= 40f;
         rb.AddForce(moveDirection, ForceMode.Acceleration);
     }
 
@@ -91,6 +97,14 @@ public class CesiumCaveInput : MonoBehaviour
                 return;
             }    
         }
+    }
+
+    /// Pour une quelconque raison, la caméra attachée au CAVE tombe d'elle même
+    /// si le CAVE a un Rigidbody (peu importe si le Rigidbody est kinématique ou ignore la gravité).
+    /// Cette méthode s'assure que la caméra reste à sa place.
+    private void SaveCamera()
+    {
+        mainCam.transform.localPosition = initialCamPosition.position;
     }
 
 }
