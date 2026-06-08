@@ -11,6 +11,10 @@ public class CesiumCaveInput : MonoBehaviour
     private Vector2 rotateInputs = Vector2.zero;
 
     private Rigidbody rb;
+
+    [SerializeField]
+    private Transform leftHand;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -18,7 +22,7 @@ public class CesiumCaveInput : MonoBehaviour
         rb.maxAngularVelocity = 2f;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         ApplyMove();
         ApplyRotate();
@@ -38,7 +42,9 @@ public class CesiumCaveInput : MonoBehaviour
     {
         //CAVE.transform.localPosition += new Vector3(moveInputs.x / 2, 0, moveInputs.y / 2);
         //moveInputs = Vector2.zero;
-        rb.AddForce(new Vector3(moveInputs.x, 0, moveInputs.y), ForceMode.Acceleration);
+        Vector3 moveDirection = leftHand.right * moveInputs.x + leftHand.forward * moveInputs.y;
+        moveDirection *= 4f;
+        rb.AddForce(moveDirection, ForceMode.Acceleration);
     }
 
     private void ApplyRotate()
