@@ -8,7 +8,11 @@ public class CesiumCaveInput : MonoBehaviour
 
     private Vector2 moveInputs = Vector2.zero;
 
-    private Vector2 rotateInputs = Vector2.zero;
+    //private Vector2 rotateInputs = Vector2.zero;
+
+    private float rotateLeft = 0f;
+
+    private float rotateRight = 0f;
 
     private Rigidbody rb;
 
@@ -27,15 +31,28 @@ public class CesiumCaveInput : MonoBehaviour
         ApplyMove();
         ApplyRotate();
     }
-
+    
     public void OnMove(InputAction.CallbackContext context)
     {
         moveInputs = context.ReadValue<Vector2>();
     }
-
+    
+    /*
     public void OnRotate(InputAction.CallbackContext context)
     {
         rotateInputs = context.ReadValue<Vector2>();
+    }
+    */
+    public void OnRotateLeft(InputAction.CallbackContext context)
+    {
+        rotateLeft = context.ReadValue<float>();
+        Debug.Log("ZL pressed! rotateLeft is " + rotateLeft);
+    }
+
+    public void OnRotateRight(InputAction.CallbackContext context)
+    {
+        rotateRight = context.ReadValue<float>();
+        Debug.Log("ZR pressed! rotateRight is " + rotateRight);
     }
 
     private void ApplyMove()
@@ -49,9 +66,31 @@ public class CesiumCaveInput : MonoBehaviour
 
     private void ApplyRotate()
     {
-        CAVE.transform.Rotate(new Vector3(rotateInputs.y, rotateInputs.x, 0));
-        rotateInputs = Vector2.zero;
+        //CAVE.transform.Rotate(new Vector3(rotateInputs.y, rotateInputs.x, 0));
+        //rotateInputs = Vector2.zero;
         //CAVE.transform.Rotate(Vector3.zero);
+        if (rotateLeft <= 0.001f) 
+        {
+            if (rotateRight <= 0.001f)
+            {
+                return;
+            }
+            else
+            {
+                rb.AddTorque(Vector3.up * rotateRight * 10f, ForceMode.VelocityChange);
+            }
+        }
+        else 
+        {
+            if (rotateRight <= 0.001f)
+            {
+                rb.AddTorque(Vector3.up * -rotateLeft * 10f, ForceMode.VelocityChange);
+            }
+            else
+            {
+                return;
+            }    
+        }
     }
 
 }
