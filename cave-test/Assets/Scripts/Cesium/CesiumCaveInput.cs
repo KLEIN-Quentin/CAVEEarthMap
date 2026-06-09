@@ -14,6 +14,8 @@ public class CesiumCaveInput : MonoBehaviour
 
     private float rotateRight = 0f;
 
+    private Vector2 zoomInputs = Vector2.one;
+
     private Rigidbody rb;
 
     [SerializeField]
@@ -35,6 +37,7 @@ public class CesiumCaveInput : MonoBehaviour
     {
         ApplyMove();
         ApplyRotate();
+        ApplyZoom();
         SaveCamera();
     }
     
@@ -59,6 +62,15 @@ public class CesiumCaveInput : MonoBehaviour
     {
         rotateRight = context.ReadValue<float>();
         Debug.Log("ZR pressed! rotateRight is " + rotateRight);
+    }
+
+    public void OnZoom(InputAction.CallbackContext context)
+    {
+        zoomInputs = context.ReadValue<Vector2>();
+        if (zoomInputs == Vector2.zero)
+        {
+            zoomInputs = Vector2.one;
+        }
     }
 
     private void ApplyMove()
@@ -97,6 +109,12 @@ public class CesiumCaveInput : MonoBehaviour
                 return;
             }    
         }
+    }
+
+    private void ApplyZoom()
+    {
+        CAVE.transform.localScale *= zoomInputs.y;
+        zoomInputs = Vector2.one;
     }
 
     /// Pour une quelconque raison, la caméra attachée au CAVE tombe d'elle même
