@@ -97,7 +97,7 @@ public class CesiumCaveInput : MonoBehaviour
         //CAVE.transform.localPosition += new Vector3(moveInputs.x / 2, 0, moveInputs.y / 2);
         //moveInputs = Vector2.zero;
         Vector3 moveDirection = leftHand.right * moveInputs.x + leftHand.forward * moveInputs.y;
-        moveDirection *= 40f;
+        moveDirection *= RelativeSpeed();
         rb.AddForce(moveDirection, ForceMode.Acceleration);
     }
 
@@ -140,19 +140,18 @@ public class CesiumCaveInput : MonoBehaviour
     {
         Vector3 elevation = new Vector3(0, goUp - goDown, 0);
         float multiplier = ElevationSpeed();
-        Debug.Log("Elevation speed is " + multiplier);
         elevation *= multiplier;
-        CesiumGeoreference gr = CesiumGeoRef.GetComponent<CesiumGeoreference>();
-        if (gr != null)
-        {
-            gr.height += (double)multiplier;
-        }
         rb.AddForce(elevation, ForceMode.VelocityChange);
     }
 
     private float ElevationSpeed()
     {
-        return Mathf.Pow(2, Mathf.Floor(Mathf.Abs(transform.position.y)));
+        return 4 * Mathf.Abs(transform.position.y);
+    }
+
+    private float RelativeSpeed()
+    {
+        return 40 * Mathf.Ceil(Mathf.Abs(transform.position.y));
     }
 
     /// Pour une quelconque raison, la caméra attachée au CAVE tombe d'elle même
