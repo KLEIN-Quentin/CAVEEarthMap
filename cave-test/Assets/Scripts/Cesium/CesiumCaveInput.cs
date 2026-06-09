@@ -1,3 +1,4 @@
+using CesiumForUnity;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -5,6 +6,8 @@ public class CesiumCaveInput : MonoBehaviour
 {
     [SerializeField]
     private GameObject CAVE;
+    [SerializeField]
+    private GameObject CesiumGeoRef;
 
     private Vector2 moveInputs = Vector2.zero;
 
@@ -139,6 +142,11 @@ public class CesiumCaveInput : MonoBehaviour
         float multiplier = ElevationSpeed();
         Debug.Log("Elevation speed is " + multiplier);
         elevation *= multiplier;
+        CesiumGeoreference gr = CesiumGeoRef.GetComponent<CesiumGeoreference>();
+        if (gr != null)
+        {
+            gr.height += (double)multiplier;
+        }
         rb.AddForce(elevation, ForceMode.VelocityChange);
     }
 
