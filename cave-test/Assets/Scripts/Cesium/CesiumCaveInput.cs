@@ -136,8 +136,15 @@ public class CesiumCaveInput : MonoBehaviour
     private void ApplyElevate()
     {
         Vector3 elevation = new Vector3(0, goUp - goDown, 0);
-        elevation *= 40f;
-        rb.AddForce(elevation, ForceMode.Acceleration);
+        float multiplier = ElevationSpeed();
+        Debug.Log("Elevation speed is " + multiplier);
+        elevation *= multiplier;
+        rb.AddForce(elevation, ForceMode.VelocityChange);
+    }
+
+    private float ElevationSpeed()
+    {
+        return Mathf.Pow(2, Mathf.Floor(Mathf.Abs(transform.position.y)));
     }
 
     /// Pour une quelconque raison, la caméra attachée au CAVE tombe d'elle même
