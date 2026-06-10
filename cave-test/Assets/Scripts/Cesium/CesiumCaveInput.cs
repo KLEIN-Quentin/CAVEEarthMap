@@ -17,10 +17,10 @@ public class CesiumCaveInput : MonoBehaviour
 
     private float rotateRight = 0f;
 
-    private Vector2 zoomInputs = Vector2.one;
+    private Vector2 elevateInputs = Vector2.zero;
 
-    private float goUp = 0f;
-    private float goDown = 0f;
+    private float scaleUp = 0f;
+    private float scaleDown = 0f;
 
     private Rigidbody rb;
 
@@ -43,8 +43,10 @@ public class CesiumCaveInput : MonoBehaviour
     {
         ApplyMove();
         ApplyRotate();
-        ApplyZoom();
+        //ApplyZoom();
+        //ApplyElevate();
         ApplyElevate();
+        ApplyScale();
         SaveCamera();
     }
     
@@ -70,7 +72,7 @@ public class CesiumCaveInput : MonoBehaviour
         rotateRight = context.ReadValue<float>();
         Debug.Log("ZR pressed! rotateRight is " + rotateRight);
     }
-
+    /*
     public void OnZoom(InputAction.CallbackContext context)
     {
         zoomInputs = context.ReadValue<Vector2>();
@@ -90,6 +92,23 @@ public class CesiumCaveInput : MonoBehaviour
     {
         goDown = context.ReadValue<float>();
         Debug.Log("Left/Down pressed!");
+    }
+    */
+    public void OnElevate(InputAction.CallbackContext context)
+    {
+        elevateInputs = context.ReadValue<Vector2>();
+    }
+
+    public void OnScaleUp(InputAction.CallbackContext context)
+    {
+        scaleUp = context.ReadValue<float>();
+        Debug.Log("dpad/Up pressed!");
+    }
+
+    public void OnScaleDown(InputAction.CallbackContext context)
+    {
+        scaleDown = context.ReadValue<float>();
+        Debug.Log("dpad/Down pressed!");
     }
 
     private void ApplyMove()
@@ -129,11 +148,13 @@ public class CesiumCaveInput : MonoBehaviour
             }    
         }
     }
-
+    /*
     private void ApplyZoom()
     {
-        CAVE.transform.localScale *= zoomInputs.y;
-        zoomInputs = Vector2.one;
+        if (zoomInputs.y >= 0.5f)
+        {
+            CAVE.transform.localScale *= 1 + zoomInputs.y;
+        }        
     }
 
     private void ApplyElevate()
@@ -142,6 +163,26 @@ public class CesiumCaveInput : MonoBehaviour
         float multiplier = ElevationSpeed();
         elevation *= multiplier;
         rb.AddForce(elevation, ForceMode.VelocityChange);
+    }
+    */
+    private void ApplyElevate()
+    {
+        Vector3 elevation = new Vector3(0, elevateInputs.y, 0);
+        float multiplier = ElevationSpeed();
+        elevation *= multiplier;
+        rb.AddForce(elevation, ForceMode.VelocityChange);
+    }
+
+    private void ApplyScale()
+    {
+        if (scaleUp > 0.001f) 
+        {
+            CAVE.transform.localScale *= 1.1f;
+        }
+        if (scaleDown > 0.001f)
+        {
+            CAVE.transform.localScale /= 1.1f;
+        }
     }
 
     private float ElevationSpeed()

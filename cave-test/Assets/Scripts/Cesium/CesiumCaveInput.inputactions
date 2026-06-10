@@ -16,7 +16,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Rotate",
+                    "name": "Rotate_UNUSED",
                     "type": "Value",
                     "id": "b7779049-d16e-4193-9a82-140c6049f8f8",
                     "expectedControlType": "Vector2",
@@ -43,7 +43,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Zoom",
+                    "name": "Zoom_UNUSED",
                     "type": "Value",
                     "id": "2ecae058-84f0-4459-b1b3-eeb9a848748d",
                     "expectedControlType": "Vector2",
@@ -52,7 +52,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "GoUp",
+                    "name": "GoUp_UNUSED",
                     "type": "Value",
                     "id": "78effd8f-6a7f-45b6-a780-1a856b94230d",
                     "expectedControlType": "Analog",
@@ -61,9 +61,36 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "GoDown",
+                    "name": "GoDown_UNUSED",
                     "type": "Value",
                     "id": "74ec434f-0f0d-4238-96e4-cd5904e95f63",
+                    "expectedControlType": "Analog",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Elevate",
+                    "type": "Value",
+                    "id": "724c952d-8979-4f13-922e-3e8e3bb7e3e9",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "ScaleUp",
+                    "type": "Value",
+                    "id": "3fbf94cf-b343-47fe-860a-366c3cda5906",
+                    "expectedControlType": "Analog",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "ScaleDown",
+                    "type": "Value",
+                    "id": "50af90c3-4702-45af-95f1-2a3c3e00ebf1",
                     "expectedControlType": "Analog",
                     "processors": "",
                     "interactions": "",
@@ -89,7 +116,7 @@
                     "interactions": "",
                     "processors": "StickDeadzone",
                     "groups": "",
-                    "action": "Rotate",
+                    "action": "Rotate_UNUSED",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -122,7 +149,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Zoom",
+                    "action": "Zoom_UNUSED",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -133,7 +160,18 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "GoUp",
+                    "action": "GoUp_UNUSED",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d95e73a8-e00d-4bbf-9b6f-66c255472d5c",
+                    "path": "<SwitchJoyConLHID>/dpad/up",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ScaleUp",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -144,7 +182,29 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "GoDown",
+                    "action": "GoDown_UNUSED",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "27a39c7a-cdd9-4943-a7f6-fb63efd6215f",
+                    "path": "<SwitchJoyConLHID>/dpad/down",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ScaleDown",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0822e0cf-0a6b-4b05-9e6d-b7501a35f651",
+                    "path": "<SwitchJoyConRHID>/rightStick",
+                    "interactions": "",
+                    "processors": "StickDeadzone",
+                    "groups": "",
+                    "action": "Elevate",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
