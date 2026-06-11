@@ -7,7 +7,7 @@ public class CesiumCaveInput : MonoBehaviour
     [SerializeField]
     private GameObject CAVE;
     [SerializeField]
-    private GameObject CesiumGeoRef;
+    private CesiumGeoreference CesiumGeoRef;
 
     private Vector2 moveInputs = Vector2.zero;
 
@@ -64,13 +64,11 @@ public class CesiumCaveInput : MonoBehaviour
     public void OnRotateLeft(InputAction.CallbackContext context)
     {
         rotateLeft = context.ReadValue<float>();
-        Debug.Log("ZL pressed! rotateLeft is " + rotateLeft);
     }
 
     public void OnRotateRight(InputAction.CallbackContext context)
     {
         rotateRight = context.ReadValue<float>();
-        Debug.Log("ZR pressed! rotateRight is " + rotateRight);
     }
     /*
     public void OnZoom(InputAction.CallbackContext context)
@@ -102,13 +100,11 @@ public class CesiumCaveInput : MonoBehaviour
     public void OnScaleUp(InputAction.CallbackContext context)
     {
         scaleUp = context.ReadValue<float>();
-        Debug.Log("dpad/Up pressed!");
     }
 
     public void OnScaleDown(InputAction.CallbackContext context)
     {
         scaleDown = context.ReadValue<float>();
-        Debug.Log("dpad/Down pressed!");
     }
 
     private void ApplyMove()
@@ -177,11 +173,13 @@ public class CesiumCaveInput : MonoBehaviour
     {
         if (scaleUp > 0.001f) 
         {
-            CAVE.transform.localScale *= 1.1f;
+            //CAVE.transform.localScale *= 1.1f;
+            CesiumGeoRef.height += 10f;
         }
         if (scaleDown > 0.001f)
         {
-            CAVE.transform.localScale /= 1.1f;
+            //CAVE.transform.localScale /= 1.1f;
+            CesiumGeoRef.height -= 10f;
         }
     }
 
@@ -192,7 +190,7 @@ public class CesiumCaveInput : MonoBehaviour
 
     private float RelativeSpeed()
     {
-        return 40 * Mathf.Ceil(Mathf.Abs(transform.position.y));
+        return 40 * (Mathf.Abs(transform.position.y) + (float)CesiumGeoRef.height);
     }
 
     /// Pour une quelconque raison, la caméra attachée au CAVE tombe d'elle même
