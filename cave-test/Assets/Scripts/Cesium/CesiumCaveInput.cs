@@ -8,6 +8,8 @@ public class CesiumCaveInput : MonoBehaviour
     private GameObject CAVE;
     [SerializeField]
     private CesiumGeoreference CesiumGeoRef;
+    [SerializeField]
+    private GameObject[] Tiles;
 
     private Vector2 moveInputs = Vector2.zero;
 
@@ -19,8 +21,8 @@ public class CesiumCaveInput : MonoBehaviour
 
     private Vector2 elevateInputs = Vector2.zero;
 
-    private float scaleUp = 0f;
-    private float scaleDown = 0f;
+    private float heightUp = 0f;
+    private float heightDown = 0f;
 
     private Rigidbody rb;
 
@@ -46,7 +48,8 @@ public class CesiumCaveInput : MonoBehaviour
         //ApplyZoom();
         //ApplyElevate();
         ApplyElevate();
-        ApplyScale();
+        ApplyHeight();
+        InterpolateRotationToSurface();
         SaveCamera();
     }
     
@@ -99,12 +102,12 @@ public class CesiumCaveInput : MonoBehaviour
 
     public void OnScaleUp(InputAction.CallbackContext context)
     {
-        scaleUp = context.ReadValue<float>();
+        heightUp = context.ReadValue<float>();
     }
 
     public void OnScaleDown(InputAction.CallbackContext context)
     {
-        scaleDown = context.ReadValue<float>();
+        heightDown = context.ReadValue<float>();
     }
 
     private void ApplyMove()
@@ -169,17 +172,40 @@ public class CesiumCaveInput : MonoBehaviour
         rb.AddForce(elevation, ForceMode.VelocityChange);
     }
 
-    private void ApplyScale()
+    private void ApplyHeight()
     {
-        if (scaleUp > 0.001f) 
+        CesiumGeoRef.height += HeightChangeSpeed();
+        if (heightUp > 0.001f) 
         {
             //CAVE.transform.localScale *= 1.1f;
-            CesiumGeoRef.height += 10f;
+            CesiumGeoRef.height += HeightChangeSpeed();
+            if (CesiumGeoRef.height > 5000f)
+            {
+                foreach (GameObject tile in Tiles)
+                {
+                    tile.transform.localScale *= HeightChangeSpeed();
+                }
+            }
         }
-        if (scaleDown > 0.001f)
+        if (heightDown > 0.001f)
         {
             //CAVE.transform.localScale /= 1.1f;
-            CesiumGeoRef.height -= 10f;
+            CesiumGeoRef.height -= HeightChangeSpeed();
+            if (CesiumGeoRef.height > 5000f)
+            {
+                foreach (GameObject tile in Tiles)
+                {
+                    tile.transform.localScale /= HeightChangeSpeed();
+                }
+            }
+        }
+        if (CesiumGeoRef.height > 500000f)
+        {
+            CesiumGeoRef.height = 500000f;
+            foreach (GameObject tile in Tiles)
+            {
+                tile.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+            }
         }
     }
 
@@ -191,6 +217,36 @@ public class CesiumCaveInput : MonoBehaviour
     private float RelativeSpeed()
     {
         return 40 * (Mathf.Abs(transform.position.y) + (float)CesiumGeoRef.height);
+    }
+
+    private float HeightChangeSpeed()
+    {
+        float result = Mathf.Exp((float)CesiumGeoRef.height / 1000f);
+        if (result > 5000f)
+        {
+            return 5000f;
+        }
+        return result;
+    }
+
+    private void InterpolateRotationToSurface()
+    {
+        Quaternion parallel = Quaternion.Euler(new Vector3(0, 0, 0));
+        Quaternion perpendicular = Quaternion.Euler(new Vector3(0, 0, 90));
+        float startThreshold = 1000f;
+        float endThreshold = 5000f;
+        if (CesiumGeoRef.height > startThreshold && CesiumGeoRef.height < endThreshold)
+        {
+            Debug.Log("Interpolating...");
+            float t = Mathf.InverseLerp(startThreshold, endThreshold, (float)CesiumGeoRef.height);
+            Vector3 euler = transform.rotation.eulerAngles;
+            float zTilt = Mathf.Lerp(0f, 90f, t);
+            transform.rotation = Quaternion.Euler(0f, euler.y, zTilt);
+            //Quaternion rotation = Quaternion.Lerp(parallel, perpendicular, t);
+            //transform.rotation = new Quaternion(transform.rotation.x, transform.rotation.y, rotation.z, transform.rotation.w);
+            //transform.rotation = transform.rotation * rotation;
+            //transform.Rotate(rotation.eulerAngles);
+        }
     }
 
     /// Pour une quelconque raison, la caméra attachée au CAVE tombe d'elle même
