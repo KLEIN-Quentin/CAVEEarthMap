@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 
 public class CesiumCaveInput : MonoBehaviour
 {
+    [Header("Game Objects")]
     [SerializeField]
     private GameObject CAVE;
     [SerializeField]
@@ -26,6 +27,7 @@ public class CesiumCaveInput : MonoBehaviour
 
     private Rigidbody rb;
 
+    [Header("Tracking")]
     [SerializeField]
     private Transform leftHand;
 
@@ -33,6 +35,12 @@ public class CesiumCaveInput : MonoBehaviour
     private GameObject mainCam;
     [SerializeField]
     private Transform initialCamPosition;
+
+    [Header("Interpolation")]
+    [SerializeField]
+    private float startThreshold = 1000f;
+    [SerializeField]
+    private float endThreshold = 5000f;
 
     private void Awake()
     {
@@ -50,6 +58,7 @@ public class CesiumCaveInput : MonoBehaviour
         ApplyElevate();
         ApplyHeight();
         InterpolateRotationToSurface();
+        InterpolateTileSize();
         SaveCamera();
     }
     
@@ -179,33 +188,15 @@ public class CesiumCaveInput : MonoBehaviour
         {
             //CAVE.transform.localScale *= 1.1f;
             CesiumGeoRef.height += HeightChangeSpeed();
-            if (CesiumGeoRef.height > 5000f)
-            {
-                foreach (GameObject tile in Tiles)
-                {
-                    tile.transform.localScale *= HeightChangeSpeed();
-                }
-            }
         }
         if (heightDown > 0.001f)
         {
             //CAVE.transform.localScale /= 1.1f;
             CesiumGeoRef.height -= HeightChangeSpeed();
-            if (CesiumGeoRef.height > 5000f)
-            {
-                foreach (GameObject tile in Tiles)
-                {
-                    tile.transform.localScale /= HeightChangeSpeed();
-                }
-            }
         }
         if (CesiumGeoRef.height > 500000f)
         {
             CesiumGeoRef.height = 500000f;
-            foreach (GameObject tile in Tiles)
-            {
-                tile.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
-            }
         }
     }
 
@@ -229,15 +220,27 @@ public class CesiumCaveInput : MonoBehaviour
         return result;
     }
 
+    private void InterpolateTileSize()
+    {
+        Vector3 startScale = Vector3.one;
+        Vector3 endScale = new Vector3(0.1f, 0.1f, 0.1f);
+        if (CesiumGeoRef.height > startThreshold && CesiumGeoRef.height < endThreshold)
+        {
+            float t = Mathf.InverseLerp(startThreshold, endThreshold, (float)CesiumGeoRef.height);
+            Vector3 newScale = Vector3.Lerp(startScale, endScale, t);
+            foreach (GameObject tile in Tiles)
+            {
+                tile.transform.localScale = newScale;
+            }
+        }
+    }
+
     private void InterpolateRotationToSurface()
     {
         Quaternion parallel = Quaternion.Euler(new Vector3(0, 0, 0));
         Quaternion perpendicular = Quaternion.Euler(new Vector3(0, 0, 90));
-        float startThreshold = 1000f;
-        float endThreshold = 5000f;
         if (CesiumGeoRef.height > startThreshold && CesiumGeoRef.height < endThreshold)
         {
-            Debug.Log("Interpolating...");
             float t = Mathf.InverseLerp(startThreshold, endThreshold, (float)CesiumGeoRef.height);
             Vector3 euler = transform.rotation.eulerAngles;
             float zTilt = Mathf.Lerp(0f, 90f, t);
