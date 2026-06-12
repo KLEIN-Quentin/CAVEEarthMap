@@ -50,7 +50,7 @@ public class CesiumCaveInput : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
-        rb.maxLinearVelocity = 20f;
+        //rb.maxLinearVelocity = 20f;
         rb.maxAngularVelocity = 2f;
         heightThresholds.Sort();
         speedTable.Sort();
@@ -129,12 +129,12 @@ public class CesiumCaveInput : MonoBehaviour
 
     private void ApplyMove()
     {
-        rb.AddForce(Vector3.forward * RelativeSpeed(), ForceMode.Acceleration);
         //CAVE.transform.localPosition += new Vector3(moveInputs.x / 2, 0, moveInputs.y / 2);
         //moveInputs = Vector2.zero;
         Vector3 moveDirection = leftHand.right * moveInputs.x + leftHand.forward * moveInputs.y;
         moveDirection *= RelativeSpeed();
-        rb.AddForce(moveDirection, ForceMode.Acceleration);
+        Debug.Log("Movement vector magnitude: " + moveDirection.magnitude);
+        rb.AddForce(moveDirection, ForceMode.VelocityChange);
     }
 
     private void ApplyRotate()
@@ -192,7 +192,6 @@ public class CesiumCaveInput : MonoBehaviour
 
     private void ApplyHeight()
     {
-        CesiumGeoRef.height += HeightChangeSpeed();
         if (heightUp > 0.001f) 
         {
             //CAVE.transform.localScale *= 1.1f;
@@ -236,6 +235,7 @@ public class CesiumCaveInput : MonoBehaviour
                 speed = speedTable[i];
             }
         }
+        Debug.Log("Current speed: " + speed);
         return speed;
     }
 
