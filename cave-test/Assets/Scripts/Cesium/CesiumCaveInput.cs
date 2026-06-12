@@ -183,7 +183,7 @@ public class CesiumCaveInput : MonoBehaviour
 
     private void ApplyHeight()
     {
-        CesiumGeoRef.height += HeightChangeSpeed();
+        //CesiumGeoRef.height += HeightChangeSpeed();
         if (heightUp > 0.001f) 
         {
             //CAVE.transform.localScale *= 1.1f;
