@@ -1,4 +1,5 @@
 using CesiumForUnity;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -41,12 +42,19 @@ public class CesiumCaveInput : MonoBehaviour
     private float startThreshold = 1000f;
     [SerializeField]
     private float endThreshold = 5000f;
+    [SerializeField]
+    private List<float> heightThresholds;
+    [SerializeField]
+    private List<float> speedTable;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
         rb.maxLinearVelocity = 20f;
         rb.maxAngularVelocity = 2f;
+        heightThresholds.Sort();
+        speedTable.Sort();
+        Debug.Assert(heightThresholds.Count == speedTable.Count, "ASSERTION FAILED: heightThresholds and speedTable must have the same number of elements.");
     }
 
     private void FixedUpdate()
@@ -121,6 +129,7 @@ public class CesiumCaveInput : MonoBehaviour
 
     private void ApplyMove()
     {
+        rb.AddForce(Vector3.forward * RelativeSpeed(), ForceMode.Acceleration);
         //CAVE.transform.localPosition += new Vector3(moveInputs.x / 2, 0, moveInputs.y / 2);
         //moveInputs = Vector2.zero;
         Vector3 moveDirection = leftHand.right * moveInputs.x + leftHand.forward * moveInputs.y;
@@ -183,7 +192,7 @@ public class CesiumCaveInput : MonoBehaviour
 
     private void ApplyHeight()
     {
-        //CesiumGeoRef.height += HeightChangeSpeed();
+        CesiumGeoRef.height += HeightChangeSpeed();
         if (heightUp > 0.001f) 
         {
             //CAVE.transform.localScale *= 1.1f;
@@ -207,7 +216,27 @@ public class CesiumCaveInput : MonoBehaviour
 
     private float RelativeSpeed()
     {
-        return 40 * (Mathf.Abs(transform.position.y) + (float)CesiumGeoRef.height);
+        //return 40 * (Mathf.Abs(transform.position.y) + (float)CesiumGeoRef.height);
+        float height = (float)CesiumGeoRef.height;
+        float speed = 1f;
+        for (int i = 0; i < speedTable.Count; i++)
+        {
+            if (height < heightThresholds[0])
+            {
+                speed = speedTable[0];
+                break;
+            }
+            if (height > heightThresholds[heightThresholds.Count - 1] || (i + 1) > speedTable.Count)
+            {
+                speed = speedTable[speedTable.Count - 1];
+                break;
+            }
+            if (heightThresholds[i] < height && height < heightThresholds[i + 1])
+            {
+                speed = speedTable[i];
+            }
+        }
+        return speed;
     }
 
     private float HeightChangeSpeed()
