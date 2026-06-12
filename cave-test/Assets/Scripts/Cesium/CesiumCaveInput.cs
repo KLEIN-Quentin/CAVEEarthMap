@@ -194,9 +194,9 @@ public class CesiumCaveInput : MonoBehaviour
             //CAVE.transform.localScale /= 1.1f;
             CesiumGeoRef.height -= HeightChangeSpeed();
         }
-        if (CesiumGeoRef.height > 500000f)
+        if (CesiumGeoRef.height > 10000000f)
         {
-            CesiumGeoRef.height = 500000f;
+            CesiumGeoRef.height = 10000000f;
         }
     }
 
