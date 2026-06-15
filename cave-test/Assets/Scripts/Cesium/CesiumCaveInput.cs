@@ -12,6 +12,8 @@ public class CesiumCaveInput : MonoBehaviour
     private CesiumGeoreference CesiumGeoRef;
     [SerializeField]
     private GameObject[] Tiles;
+    [SerializeField]
+    private CesiumGlobeAnchor anchor;
 
     private Vector2 moveInputs = Vector2.zero;
 
@@ -50,11 +52,14 @@ public class CesiumCaveInput : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        Debug.Assert(rb != null, "ASSERTION FAILED: A Rigidbody must be attached to this GameObject.");
         //rb.maxLinearVelocity = 20f;
         rb.maxAngularVelocity = 2f;
         heightThresholds.Sort();
         speedTable.Sort();
         Debug.Assert(heightThresholds.Count == speedTable.Count, "ASSERTION FAILED: heightThresholds and speedTable must have the same number of elements.");
+        anchor = GetComponent<CesiumGlobeAnchor>();
+        Debug.Assert(anchor != null, "ASSERTION FAILED: A Cesium Globe Anchor must be attached to this GameObject.");
     }
 
     private void FixedUpdate()
@@ -133,7 +138,7 @@ public class CesiumCaveInput : MonoBehaviour
         //moveInputs = Vector2.zero;
         Vector3 moveDirection = leftHand.right * moveInputs.x + leftHand.forward * moveInputs.y;
         moveDirection *= RelativeSpeed();
-        Debug.Log("Movement vector magnitude: " + moveDirection.magnitude);
+        //Debug.Log("Movement vector magnitude: " + moveDirection.magnitude);
         rb.AddForce(moveDirection, ForceMode.VelocityChange);
     }
 
@@ -195,22 +200,26 @@ public class CesiumCaveInput : MonoBehaviour
         if (heightUp > 0.001f) 
         {
             //CAVE.transform.localScale *= 1.1f;
-            CesiumGeoRef.height += HeightChangeSpeed();
+            //CesiumGeoRef.height += HeightChangeSpeed();
+            anchor.longitudeLatitudeHeight = new Unity.Mathematics.double3(anchor.longitudeLatitudeHeight.x, anchor.longitudeLatitudeHeight.y, anchor.longitudeLatitudeHeight.z + HeightChangeSpeed());
         }
         if (heightDown > 0.001f)
         {
             //CAVE.transform.localScale /= 1.1f;
-            CesiumGeoRef.height -= HeightChangeSpeed();
+            //CesiumGeoRef.height -= HeightChangeSpeed();
+            anchor.longitudeLatitudeHeight = new Unity.Mathematics.double3(anchor.longitudeLatitudeHeight.x, anchor.longitudeLatitudeHeight.y, anchor.longitudeLatitudeHeight.z - HeightChangeSpeed());
         }
         if (CesiumGeoRef.height > 10000000f)
         {
-            CesiumGeoRef.height = 10000000f;
+            //CesiumGeoRef.height = 10000000f;
+            anchor.longitudeLatitudeHeight = new Unity.Mathematics.double3(anchor.longitudeLatitudeHeight.x, anchor.longitudeLatitudeHeight.y, 10000000f);
+
         }
     }
 
     private float ElevationSpeed()
     {
-        return 4 * Mathf.Abs(transform.position.y);
+        return RelativeSpeed();
     }
 
     private float RelativeSpeed()
@@ -235,7 +244,7 @@ public class CesiumCaveInput : MonoBehaviour
                 speed = speedTable[i];
             }
         }
-        Debug.Log("Current speed: " + speed);
+        //Debug.Log("Current speed: " + speed);
         return speed;
     }
 
