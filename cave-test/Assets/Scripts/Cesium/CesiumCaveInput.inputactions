@@ -25,7 +25,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "RotateLeft_UNUSED",
+                    "name": "RotateLeft",
                     "type": "Value",
                     "id": "e73e22ce-6b8e-4660-b4f3-2f899bee086c",
                     "expectedControlType": "Analog",
@@ -34,7 +34,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "RotateRight_UNUSED",
+                    "name": "RotateRight",
                     "type": "Value",
                     "id": "9f8ca031-656c-4f60-8a3e-b2f3dbf66e09",
                     "expectedControlType": "Analog",
@@ -136,7 +136,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "RotateLeft_UNUSED",
+                    "action": "RotateLeft",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -147,7 +147,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "RotateRight_UNUSED",
+                    "action": "RotateRight",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

@@ -177,7 +177,7 @@ public class CesiumCaveInput : MonoBehaviour
         //CAVE.transform.Rotate(new Vector3(rotateInputs.y, rotateInputs.x, 0));
         //rotateInputs = Vector2.zero;
         //CAVE.transform.Rotate(Vector3.zero);
-        /*if (rotateLeft <= 0.001f) 
+        if (rotateLeft <= 0.001f) 
         {
             if (rotateRight <= 0.001f)
             {
@@ -185,25 +185,25 @@ public class CesiumCaveInput : MonoBehaviour
             }
             else
             {
-                rb.AddTorque(Vector3.up * rotateRight * 10f, ForceMode.VelocityChange);
+                rb.AddTorque(Vector3.up * rotateRight, ForceMode.VelocityChange);
             }
         }
         else 
         {
             if (rotateRight <= 0.001f)
             {
-                rb.AddTorque(Vector3.up * -rotateLeft * 10f, ForceMode.VelocityChange);
+                rb.AddTorque(Vector3.up * -rotateLeft, ForceMode.VelocityChange);
             }
             else
             {
                 return;
             }    
         }
-        */
+        
         //Vector3 torque = new Vector3(rotateInputs.y, rotateInputs.x, 0f);
-        Vector3 torque = transform.forward * rotateInputs.y + Vector3.up * rotateInputs.x;
-        torque *= 5f;
-        rb.AddTorque(torque, ForceMode.VelocityChange);
+        //Vector3 torque = transform.forward * rotateInputs.y + Vector3.up * rotateInputs.x;
+        //torque *= 5f;
+        //rb.AddTorque(torque, ForceMode.VelocityChange);
     }
     /*
     private void ApplyZoom()
@@ -292,7 +292,7 @@ public class CesiumCaveInput : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(transform.position, Vector3.up * -1, out hit, height))
         {
-            return hit.distance;
+            return Mathf.Clamp(hit.distance, 1f, 200f);
         }
         return 1f;
     }
