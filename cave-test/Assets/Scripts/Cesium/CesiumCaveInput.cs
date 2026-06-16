@@ -230,6 +230,10 @@ public class CesiumCaveInput : MonoBehaviour
     {
         //return 40 * (Mathf.Abs(transform.position.y) + (float)CesiumGeoRef.height);
         float height = (float)CesiumGeoRef.height;
+        if (height < downRaycastMaxHeight)
+        {
+            return RelativeSpeedFromRaycast(height);
+        }
         float speed = 1f;
         for (int i = 0; i < speedTable.Count; i++)
         {
@@ -250,6 +254,16 @@ public class CesiumCaveInput : MonoBehaviour
         }
         //Debug.Log("Current speed: " + speed);
         return speed;
+    }
+
+    private float RelativeSpeedFromRaycast(float height)
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, Vector3.up * -1, out hit, height))
+        {
+            return hit.distance;
+        }
+        return 1f;
     }
 
     private float HeightChangeSpeed()
