@@ -44,6 +44,10 @@ public class CesiumCaveInput : MonoBehaviour
     private float startThreshold = 1000f;
     [SerializeField]
     private float endThreshold = 5000f;
+
+    [Header("Speed calculations")]
+    [SerializeField]
+    private float downRaycastMaxHeight = 800f;
     [SerializeField]
     private List<float> heightThresholds;
     [SerializeField]
@@ -62,7 +66,7 @@ public class CesiumCaveInput : MonoBehaviour
         Debug.Assert(anchor != null, "ASSERTION FAILED: A Cesium Globe Anchor must be attached to this GameObject.");
     }
 
-    private void FixedUpdate()
+    private void LateUpdate()
     {
         ApplyMove();
         ApplyRotate();
