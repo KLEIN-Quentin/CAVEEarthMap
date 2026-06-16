@@ -1,4 +1,5 @@
 using CesiumForUnity;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -17,7 +18,7 @@ public class CesiumCaveInput : MonoBehaviour
 
     private Vector2 moveInputs = Vector2.zero;
 
-    //private Vector2 rotateInputs = Vector2.zero;
+    private Vector2 rotateInputs = Vector2.zero;
 
     private float rotateLeft = 0f;
 
@@ -44,6 +45,9 @@ public class CesiumCaveInput : MonoBehaviour
     private float startThreshold = 1000f;
     [SerializeField]
     private float endThreshold = 5000f;
+    [SerializeField]
+    private float interpolationSeconds = 3f;
+    private bool freezeInputs = false;
 
     [Header("Speed calculations")]
     [SerializeField]
@@ -52,6 +56,8 @@ public class CesiumCaveInput : MonoBehaviour
     private List<float> heightThresholds;
     [SerializeField]
     private List<float> speedTable;
+
+    private bool isViewParallel = true;
 
     private void Awake()
     {
@@ -68,13 +74,15 @@ public class CesiumCaveInput : MonoBehaviour
 
     private void LateUpdate()
     {
-        ApplyMove();
-        ApplyRotate();
+        if (!freezeInputs)
+        {
+            ApplyMove();
+            ApplyRotate();
+            ApplyHeight();
+        }
         //ApplyZoom();
         //ApplyElevate();
-        ApplyElevate();
-        ApplyHeight();
-        InterpolateRotationToSurface();
+        //InterpolateRotationToSurface();
         InterpolateTileSize();
         SaveCamera();
     }
@@ -84,12 +92,12 @@ public class CesiumCaveInput : MonoBehaviour
         moveInputs = context.ReadValue<Vector2>();
     }
     
-    /*
+    
     public void OnRotate(InputAction.CallbackContext context)
     {
         rotateInputs = context.ReadValue<Vector2>();
     }
-    */
+    
     public void OnRotateLeft(InputAction.CallbackContext context)
     {
         rotateLeft = context.ReadValue<float>();
@@ -136,13 +144,31 @@ public class CesiumCaveInput : MonoBehaviour
         heightDown = context.ReadValue<float>();
     }
 
+    public void ToggleViewMode(InputAction.CallbackContext context)
+    {
+        if (context.performed && !freezeInputs)
+        {
+            isViewParallel = !isViewParallel;
+            freezeInputs = true;
+            StartCoroutine(InterpolateRotationToSurface());
+        }
+    }
+
     private void ApplyMove()
     {
         //CAVE.transform.localPosition += new Vector3(moveInputs.x / 2, 0, moveInputs.y / 2);
         //moveInputs = Vector2.zero;
-        Vector3 moveDirection = leftHand.right * moveInputs.x + leftHand.forward * moveInputs.y;
-        moveDirection *= RelativeSpeed();
+        Vector3 moveDirection = Vector3.zero;
         //Debug.Log("Movement vector magnitude: " + moveDirection.magnitude);
+        if (isViewParallel)
+        {
+            moveDirection = leftHand.right * moveInputs.x + leftHand.forward * moveInputs.y;
+        }
+        else
+        {
+            moveDirection = leftHand.right * moveInputs.x + leftHand.up * moveInputs.y;
+        }
+        moveDirection *= RelativeSpeed();
         rb.AddForce(moveDirection, ForceMode.VelocityChange);
     }
 
@@ -151,7 +177,7 @@ public class CesiumCaveInput : MonoBehaviour
         //CAVE.transform.Rotate(new Vector3(rotateInputs.y, rotateInputs.x, 0));
         //rotateInputs = Vector2.zero;
         //CAVE.transform.Rotate(Vector3.zero);
-        if (rotateLeft <= 0.001f) 
+        /*if (rotateLeft <= 0.001f) 
         {
             if (rotateRight <= 0.001f)
             {
@@ -173,6 +199,11 @@ public class CesiumCaveInput : MonoBehaviour
                 return;
             }    
         }
+        */
+        //Vector3 torque = new Vector3(rotateInputs.y, rotateInputs.x, 0f);
+        Vector3 torque = transform.forward * rotateInputs.y + Vector3.up * rotateInputs.x;
+        torque *= 5f;
+        rb.AddTorque(torque, ForceMode.VelocityChange);
     }
     /*
     private void ApplyZoom()
@@ -190,7 +221,7 @@ public class CesiumCaveInput : MonoBehaviour
         elevation *= multiplier;
         rb.AddForce(elevation, ForceMode.VelocityChange);
     }
-    */
+    
     private void ApplyElevate()
     {
         Vector3 elevation = new Vector3(0, elevateInputs.y, 0);
@@ -198,7 +229,7 @@ public class CesiumCaveInput : MonoBehaviour
         elevation *= multiplier;
         rb.AddForce(elevation, ForceMode.VelocityChange);
     }
-
+    */
     private void ApplyHeight()
     {
         if (heightUp > 0.001f) 
@@ -290,7 +321,7 @@ public class CesiumCaveInput : MonoBehaviour
             }
         }
     }
-
+    /*
     private void InterpolateRotationToSurface()
     {
         Quaternion parallel = Quaternion.Euler(new Vector3(0, 0, 0));
@@ -306,6 +337,45 @@ public class CesiumCaveInput : MonoBehaviour
             //transform.rotation = transform.rotation * rotation;
             //transform.Rotate(rotation.eulerAngles);
         }
+    }
+    */
+    private IEnumerator InterpolateRotationToSurface()
+    {
+        float timeElapsed = 0f;
+        if (isViewParallel)
+        {
+            Debug.Log("Supposed to interpolate from Perpendicular to Parallel view");
+            while (timeElapsed < interpolationSeconds)
+            {
+                float t = timeElapsed / interpolationSeconds;
+                Vector3 euler = transform.rotation.eulerAngles;
+                float zTilt = Mathf.Lerp(90f, 0f, t);
+                transform.rotation = Quaternion.Euler(0f, euler.y, zTilt);
+                timeElapsed += Time.deltaTime;
+                yield return null;
+            }
+            freezeInputs = false;
+            transform.rotation = Quaternion.Euler(0f, transform.rotation.eulerAngles.y, 0f);
+
+            
+        }
+        else
+        {
+            Debug.Log("Supposed to interpolate from Parallel to Perpendicular view");
+            while (timeElapsed < interpolationSeconds)
+            {
+                float t = timeElapsed / interpolationSeconds;
+                Vector3 euler = transform.rotation.eulerAngles;
+                float zTilt = Mathf.Lerp(0f, 90f, t);
+                transform.rotation = Quaternion.Euler(0f, euler.y, zTilt);
+                timeElapsed += Time.deltaTime;
+                yield return null;
+            }
+            freezeInputs = false;
+            transform.rotation = Quaternion.Euler(0f, transform.rotation.eulerAngles.y, 90f);
+
+        }
+
     }
 
     /// Pour une quelconque raison, la caméra attachée au CAVE tombe d'elle même

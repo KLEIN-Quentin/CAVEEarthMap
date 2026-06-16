@@ -16,7 +16,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Rotate_UNUSED",
+                    "name": "Rotate",
                     "type": "Value",
                     "id": "b7779049-d16e-4193-9a82-140c6049f8f8",
                     "expectedControlType": "Vector2",
@@ -25,7 +25,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "RotateLeft",
+                    "name": "RotateLeft_UNUSED",
                     "type": "Value",
                     "id": "e73e22ce-6b8e-4660-b4f3-2f899bee086c",
                     "expectedControlType": "Analog",
@@ -34,7 +34,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "RotateRight",
+                    "name": "RotateRight_UNUSED",
                     "type": "Value",
                     "id": "9f8ca031-656c-4f60-8a3e-b2f3dbf66e09",
                     "expectedControlType": "Analog",
@@ -70,7 +70,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Elevate",
+                    "name": "Elevate_UNUSED",
                     "type": "Value",
                     "id": "724c952d-8979-4f13-922e-3e8e3bb7e3e9",
                     "expectedControlType": "Vector2",
@@ -79,7 +79,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "ScaleUp",
+                    "name": "HeightUp",
                     "type": "Value",
                     "id": "3fbf94cf-b343-47fe-860a-366c3cda5906",
                     "expectedControlType": "Analog",
@@ -88,13 +88,22 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "ScaleDown",
+                    "name": "HeightDown",
                     "type": "Value",
                     "id": "50af90c3-4702-45af-95f1-2a3c3e00ebf1",
                     "expectedControlType": "Analog",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "ToggleViewMode",
+                    "type": "Button",
+                    "id": "22c31e77-5f73-4278-837d-cd30383e2054",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -116,7 +125,7 @@
                     "interactions": "",
                     "processors": "StickDeadzone",
                     "groups": "",
-                    "action": "Rotate_UNUSED",
+                    "action": "Rotate",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -127,7 +136,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "RotateLeft",
+                    "action": "RotateLeft_UNUSED",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -138,7 +147,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "RotateRight",
+                    "action": "RotateRight_UNUSED",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -171,7 +180,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "ScaleUp",
+                    "action": "HeightUp",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -193,7 +202,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "ScaleDown",
+                    "action": "HeightDown",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -204,7 +213,18 @@
                     "interactions": "",
                     "processors": "StickDeadzone",
                     "groups": "",
-                    "action": "Elevate",
+                    "action": "Elevate_UNUSED",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "93ee9741-f05c-4faf-9fc8-203e5c774415",
+                    "path": "<SwitchJoyConRHID>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ToggleViewMode",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
