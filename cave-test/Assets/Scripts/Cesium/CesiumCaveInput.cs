@@ -150,6 +150,7 @@ public class CesiumCaveInput : MonoBehaviour
         if (!allowViewToggle)
         {
             Debug.Log("View toggling has been turned off.");
+            return;
         }
         if (context.performed && !freezeInputs)
         {
