@@ -2,6 +2,7 @@
   "dependencies": {
     "com.canopteks.switchcontrollerinput": "https://github.com/thomasduhamel/Switch-Controller-for-Unity.git?path=/Packages/com.canopteks.switchcontrollerinput#package-format",
     "com.cesium.unity": "1.23.3",
+    "com.middlevr": "file:C:/Program Files/MiddleVR4/unity_packages/com.middlevr.tgz",
     "com.siccity.gltfutility": "https://github.com/siccity/gltfutility.git",
     "com.unity.animation.rigging": "1.3.0",
     "com.unity.collab-proxy": "2.10.0",
