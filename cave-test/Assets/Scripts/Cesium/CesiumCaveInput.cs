@@ -16,20 +16,11 @@ public class CesiumCaveInput : MonoBehaviour
     [SerializeField]
     private CesiumGlobeAnchor anchor;
 
-    private Vector2 moveInputs = Vector2.zero;
+    [Header("Settings")]
+    [SerializeField]
+    private bool allowViewToggle = false;
 
-    private Vector2 rotateInputs = Vector2.zero;
 
-    private float rotateLeft = 0f;
-
-    private float rotateRight = 0f;
-
-    private Vector2 elevateInputs = Vector2.zero;
-
-    private float heightUp = 0f;
-    private float heightDown = 0f;
-
-    private Rigidbody rb;
 
     [Header("Tracking")]
     [SerializeField]
@@ -57,7 +48,17 @@ public class CesiumCaveInput : MonoBehaviour
     [SerializeField]
     private List<float> speedTable;
 
-    private bool isViewParallel = true;
+    [Header("Internals")]
+    private Vector2 moveInputs = Vector2.zero;
+    private Vector2 rotateInputs = Vector2.zero;
+    private float rotateLeft = 0f;
+    private float rotateRight = 0f;
+    private Vector2 elevateInputs = Vector2.zero;
+    private float heightUp = 0f;
+    private float heightDown = 0f;
+    private Rigidbody rb;
+
+    private bool isViewParallel = false;
 
     private void Awake()
     {
@@ -146,6 +147,10 @@ public class CesiumCaveInput : MonoBehaviour
 
     public void ToggleViewMode(InputAction.CallbackContext context)
     {
+        if (!allowViewToggle)
+        {
+            Debug.Log("View toggling has been turned off.");
+        }
         if (context.performed && !freezeInputs)
         {
             isViewParallel = !isViewParallel;
@@ -261,10 +266,6 @@ public class CesiumCaveInput : MonoBehaviour
     {
         //return 40 * (Mathf.Abs(transform.position.y) + (float)CesiumGeoRef.height);
         float height = (float)CesiumGeoRef.height;
-        if (height < downRaycastMaxHeight)
-        {
-            return RelativeSpeedFromRaycast(height);
-        }
         float speed = 1f;
         for (int i = 0; i < speedTable.Count; i++)
         {
@@ -287,24 +288,10 @@ public class CesiumCaveInput : MonoBehaviour
         return speed;
     }
 
-    private float RelativeSpeedFromRaycast(float height)
-    {
-        RaycastHit hit;
-        if (Physics.Raycast(transform.position, Vector3.up * -1, out hit, height))
-        {
-            return Mathf.Clamp(hit.distance, 1f, 200f);
-        }
-        return 1f;
-    }
-
     private float HeightChangeSpeed()
     {
-        float result = Mathf.Exp((float)CesiumGeoRef.height / 1000f);
-        if (result > 5000f)
-        {
-            return 5000f;
-        }
-        return result;
+        float result = RelativeSpeed() / 10f;
+        return result < 100f ? 100f : result;
     }
 
     private void InterpolateTileSize()
