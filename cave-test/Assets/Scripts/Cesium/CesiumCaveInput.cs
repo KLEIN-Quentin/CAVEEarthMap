@@ -15,8 +15,7 @@ public class CesiumCaveInput : MonoBehaviour
     private GameObject[] Tiles;
     [SerializeField]
     private CesiumGlobeAnchor anchor;
-    [SerializeField]
-    private GameObject userPOV;
+
 
     [Header("Settings")]
     [SerializeField]
@@ -56,8 +55,8 @@ public class CesiumCaveInput : MonoBehaviour
     private float rotateLeft = 0f;
     private float rotateRight = 0f;
     private Vector2 elevateInputs = Vector2.zero;
-    private float heightUp = 0f;
-    private float heightDown = 0f;
+    private float zoomUp = 0f;
+    private float zoomDown = 0f;
     private Rigidbody rb;
 
     private bool isViewParallel = false;
@@ -81,15 +80,13 @@ public class CesiumCaveInput : MonoBehaviour
         {
             ApplyMove();
             ApplyRotate();
-            ApplyHeight();
+            ApplyZoom();
         }
         //ApplyZoom();
         //ApplyElevate();
         //InterpolateRotationToSurface();
         InterpolateTileSize();
         SaveCamera();
-        Debug.Log("Distance to origin is " + Vector3.Distance(transform.position, Vector3.zero));
-        Debug.Log("LocalUser is at " + userPOV.transform.position + ", " + Vector3.Distance(userPOV.transform.position, Vector3.zero) + " units away from origin");
     }
     
     public void OnMove(InputAction.CallbackContext context)
@@ -141,12 +138,12 @@ public class CesiumCaveInput : MonoBehaviour
 
     public void OnScaleUp(InputAction.CallbackContext context)
     {
-        heightUp = context.ReadValue<float>();
+        zoomUp = context.ReadValue<float>();
     }
 
     public void OnScaleDown(InputAction.CallbackContext context)
     {
-        heightDown = context.ReadValue<float>();
+        zoomDown = context.ReadValue<float>();
     }
 
     public void ToggleViewMode(InputAction.CallbackContext context)
@@ -240,24 +237,38 @@ public class CesiumCaveInput : MonoBehaviour
         rb.AddForce(elevation, ForceMode.VelocityChange);
     }
     */
-    private void ApplyHeight()
+    private void ApplyZoom()
     {
-        if (heightUp > 0.001f) 
+        if (zoomUp > 0.001f) 
         {
             //CAVE.transform.localScale *= 1.1f;
             //CesiumGeoRef.height += HeightChangeSpeed();
-            anchor.longitudeLatitudeHeight = new Unity.Mathematics.double3(anchor.longitudeLatitudeHeight.x, anchor.longitudeLatitudeHeight.y, anchor.longitudeLatitudeHeight.z + HeightChangeSpeed());
+            //anchor.longitudeLatitudeHeight = new Unity.Mathematics.double3(anchor.longitudeLatitudeHeight.x, anchor.longitudeLatitudeHeight.y, anchor.longitudeLatitudeHeight.z + HeightChangeSpeed());
+            Debug.Log("Zooming up");
+            foreach (GameObject tile in Tiles)
+            {
+                Debug.Log("Old tile scale: " + tile.transform.localScale);
+                tile.transform.localScale *= 1.1f;
+                Debug.Log("New tile scale: " + tile.transform.localScale);
+            }
         }
-        if (heightDown > 0.001f)
+        if (zoomDown > 0.001f)
         {
             //CAVE.transform.localScale /= 1.1f;
             //CesiumGeoRef.height -= HeightChangeSpeed();
-            anchor.longitudeLatitudeHeight = new Unity.Mathematics.double3(anchor.longitudeLatitudeHeight.x, anchor.longitudeLatitudeHeight.y, anchor.longitudeLatitudeHeight.z - HeightChangeSpeed());
+            //anchor.longitudeLatitudeHeight = new Unity.Mathematics.double3(anchor.longitudeLatitudeHeight.x, anchor.longitudeLatitudeHeight.y, anchor.longitudeLatitudeHeight.z - HeightChangeSpeed());
+            Debug.Log("Zooming down");
+            foreach (GameObject tile in Tiles)
+            {
+                Debug.Log("Old tile scale: " + tile.transform.localScale);
+                tile.transform.localScale /= 1.1f;
+                Debug.Log("New tile scale: " + tile.transform.localScale);
+            }
         }
         if (CesiumGeoRef.height > 10000000f)
         {
             //CesiumGeoRef.height = 10000000f;
-            anchor.longitudeLatitudeHeight = new Unity.Mathematics.double3(anchor.longitudeLatitudeHeight.x, anchor.longitudeLatitudeHeight.y, 10000000f);
+            //anchor.longitudeLatitudeHeight = new Unity.Mathematics.double3(anchor.longitudeLatitudeHeight.x, anchor.longitudeLatitudeHeight.y, 10000000f);
 
         }
     }

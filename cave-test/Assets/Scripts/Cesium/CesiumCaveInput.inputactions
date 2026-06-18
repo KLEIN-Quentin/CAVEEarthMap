@@ -79,7 +79,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "HeightUp",
+                    "name": "ZoomUp",
                     "type": "Value",
                     "id": "3fbf94cf-b343-47fe-860a-366c3cda5906",
                     "expectedControlType": "Analog",
@@ -88,7 +88,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "HeightDown",
+                    "name": "ZoomDown",
                     "type": "Value",
                     "id": "50af90c3-4702-45af-95f1-2a3c3e00ebf1",
                     "expectedControlType": "Analog",
@@ -180,7 +180,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "HeightUp",
+                    "action": "ZoomUp",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -202,7 +202,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "HeightDown",
+                    "action": "ZoomDown",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
