@@ -15,6 +15,8 @@ public class CesiumCaveInput : MonoBehaviour
     private GameObject[] Tiles;
     [SerializeField]
     private CesiumGlobeAnchor anchor;
+    [SerializeField]
+    private GameObject userPOV;
 
     [Header("Settings")]
     [SerializeField]
@@ -86,6 +88,8 @@ public class CesiumCaveInput : MonoBehaviour
         //InterpolateRotationToSurface();
         InterpolateTileSize();
         SaveCamera();
+        Debug.Log("Distance to origin is " + Vector3.Distance(transform.position, Vector3.zero));
+        Debug.Log("LocalUser is at " + userPOV.transform.position + ", " + Vector3.Distance(userPOV.transform.position, Vector3.zero) + " units away from origin");
     }
     
     public void OnMove(InputAction.CallbackContext context)
