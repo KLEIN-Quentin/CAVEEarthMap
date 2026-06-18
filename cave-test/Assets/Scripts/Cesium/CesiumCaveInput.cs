@@ -58,11 +58,13 @@ public class CesiumCaveInput : MonoBehaviour
     private float zoomUp = 0f;
     private float zoomDown = 0f;
     private Rigidbody rb;
+    private Vector3 startPos;
 
     private bool isViewParallel = false;
 
     private void Awake()
     {
+        startPos = transform.position;
         rb = GetComponent<Rigidbody>();
         Debug.Assert(rb != null, "ASSERTION FAILED: A Rigidbody must be attached to this GameObject.");
         //rb.maxLinearVelocity = 20f;
@@ -165,6 +167,7 @@ public class CesiumCaveInput : MonoBehaviour
     {
         //CAVE.transform.localPosition += new Vector3(moveInputs.x / 2, 0, moveInputs.y / 2);
         //moveInputs = Vector2.zero;
+        /*
         Vector3 moveDirection = Vector3.zero;
         //Debug.Log("Movement vector magnitude: " + moveDirection.magnitude);
         if (isViewParallel)
@@ -177,6 +180,19 @@ public class CesiumCaveInput : MonoBehaviour
         }
         moveDirection *= RelativeSpeed();
         rb.AddForce(moveDirection, ForceMode.VelocityChange);
+        */
+        if (Mathf.Abs(moveInputs.x) > 0.2f || Mathf.Abs(moveInputs.y) > 0.2f)
+        {
+            Vector3 movement = leftHand.right * moveInputs.x + leftHand.up * moveInputs.y;
+            movement.Normalize();
+            Unity.Mathematics.double3 surfaceNormal = CesiumGeoRef.ellipsoid.GeodeticSurfaceNormal(anchor.positionGlobeFixed);
+            Debug.Log("Surface normal is " + surfaceNormal);
+            Vector3 normal = new Vector3((float)surfaceNormal.x, (float)surfaceNormal.y, (float)surfaceNormal.z);
+            normal.Normalize();
+            Vector3 move = Vector3.ProjectOnPlane(movement, normal).normalized;
+            move *= RelativeSpeed();
+            rb.AddForce(move, ForceMode.VelocityChange);
+        }
     }
 
     private void ApplyRotate()
