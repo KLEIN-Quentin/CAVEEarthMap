@@ -15,6 +15,10 @@ public class CesiumCaveInput : MonoBehaviour
     private GameObject[] Tiles;
     [SerializeField]
     private CesiumGlobeAnchor anchor;
+    [SerializeField]
+    private GameObject globeApproximator;
+    [SerializeField]
+    private GameObject globeApproximatorSphere;
 
 
     [Header("Settings")]
@@ -59,6 +63,7 @@ public class CesiumCaveInput : MonoBehaviour
     private float zoomDown = 0f;
     private Rigidbody rb;
     private Vector3 startPos;
+    private float orbitRadius = 0f;
 
     private bool isViewParallel = false;
 
@@ -74,6 +79,7 @@ public class CesiumCaveInput : MonoBehaviour
         Debug.Assert(heightThresholds.Count == speedTable.Count, "ASSERTION FAILED: heightThresholds and speedTable must have the same number of elements.");
         anchor = GetComponent<CesiumGlobeAnchor>();
         Debug.Assert(anchor != null, "ASSERTION FAILED: A Cesium Globe Anchor must be attached to this GameObject.");
+        orbitRadius = Vector3.Distance(transform.position, globeApproximatorSphere.transform.position);
     }
 
     private void LateUpdate()
@@ -89,6 +95,8 @@ public class CesiumCaveInput : MonoBehaviour
         //InterpolateRotationToSurface();
         InterpolateTileSize();
         SaveCamera();
+        KeepFacingTowardsSurface();
+        KeepInOrbit();
     }
     
     public void OnMove(InputAction.CallbackContext context)
@@ -167,32 +175,20 @@ public class CesiumCaveInput : MonoBehaviour
     {
         //CAVE.transform.localPosition += new Vector3(moveInputs.x / 2, 0, moveInputs.y / 2);
         //moveInputs = Vector2.zero;
-        /*
+        
         Vector3 moveDirection = Vector3.zero;
+        moveInputs = new Vector2(0.2f, 0f);
         //Debug.Log("Movement vector magnitude: " + moveDirection.magnitude);
-        if (isViewParallel)
+        moveDirection = transform.right * moveInputs.x + transform.up * moveInputs.y;
+        float speed = RelativeSpeed();
+        moveDirection *= speed;
+        Vector3 finalMove = Vector3.ProjectOnPlane(moveDirection, (transform.position - globeApproximatorSphere.transform.position));
+        foreach (GameObject tile in Tiles)
         {
-            moveDirection = leftHand.right * moveInputs.x + leftHand.forward * moveInputs.y;
+            tile.transform.RotateAround(globeApproximatorSphere.transform.position, Vector3.up, moveInputs.x);
+            tile.transform.RotateAround(globeApproximatorSphere.transform.position, Vector3.right, moveInputs.y);
         }
-        else
-        {
-            moveDirection = leftHand.right * moveInputs.x + leftHand.up * moveInputs.y;
-        }
-        moveDirection *= RelativeSpeed();
-        rb.AddForce(moveDirection, ForceMode.VelocityChange);
-        */
-        if (Mathf.Abs(moveInputs.x) > 0.2f || Mathf.Abs(moveInputs.y) > 0.2f)
-        {
-            Vector3 movement = leftHand.right * moveInputs.x + leftHand.up * moveInputs.y;
-            movement.Normalize();
-            Unity.Mathematics.double3 surfaceNormal = CesiumGeoRef.ellipsoid.GeodeticSurfaceNormal(anchor.positionGlobeFixed);
-            Debug.Log("Surface normal is " + surfaceNormal);
-            Vector3 normal = new Vector3((float)surfaceNormal.x, (float)surfaceNormal.y, (float)surfaceNormal.z);
-            normal.Normalize();
-            Vector3 move = Vector3.ProjectOnPlane(movement, normal).normalized;
-            move *= RelativeSpeed();
-            rb.AddForce(move, ForceMode.VelocityChange);
-        }
+        //rb.AddForce(finalMove, ForceMode.VelocityChange);
     }
 
     private void ApplyRotate()
@@ -267,6 +263,7 @@ public class CesiumCaveInput : MonoBehaviour
                 tile.transform.localScale *= 1.1f;
                 Debug.Log("New tile scale: " + tile.transform.localScale);
             }
+            globeApproximator.transform.localScale *= 1.1f;
         }
         if (zoomDown > 0.001f)
         {
@@ -280,6 +277,7 @@ public class CesiumCaveInput : MonoBehaviour
                 tile.transform.localScale /= 1.1f;
                 Debug.Log("New tile scale: " + tile.transform.localScale);
             }
+            globeApproximator.transform.localScale /= 1.1f;
         }
         if (CesiumGeoRef.height > 10000000f)
         {
@@ -405,4 +403,15 @@ public class CesiumCaveInput : MonoBehaviour
         mainCam.transform.localPosition = initialCamPosition.position;
     }
 
+    private void KeepFacingTowardsSurface()
+    {
+        //Quaternion rotate = Quaternion.LookRotation(globeApproximatorSphere.transform.position - transform.position, transform.up);
+        //rb.MoveRotation(rotate);
+    }
+
+    private void KeepInOrbit()
+    {
+
+    }
 }
+ 
