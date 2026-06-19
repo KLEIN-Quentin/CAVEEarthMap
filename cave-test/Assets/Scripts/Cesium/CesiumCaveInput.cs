@@ -13,8 +13,8 @@ public class CesiumCaveInput : MonoBehaviour
     private CesiumGeoreference CesiumGeoRef;
     [SerializeField]
     private GameObject[] Tiles;
-    [SerializeField]
-    private CesiumGlobeAnchor anchor;
+    //[SerializeField]
+    //private CesiumGlobeAnchor anchor;
     [SerializeField]
     private GameObject globeApproximator;
     [SerializeField]
@@ -77,8 +77,8 @@ public class CesiumCaveInput : MonoBehaviour
         heightThresholds.Sort();
         speedTable.Sort();
         Debug.Assert(heightThresholds.Count == speedTable.Count, "ASSERTION FAILED: heightThresholds and speedTable must have the same number of elements.");
-        anchor = GetComponent<CesiumGlobeAnchor>();
-        Debug.Assert(anchor != null, "ASSERTION FAILED: A Cesium Globe Anchor must be attached to this GameObject.");
+        //anchor = GetComponent<CesiumGlobeAnchor>();
+        //Debug.Assert(anchor != null, "ASSERTION FAILED: A Cesium Globe Anchor must be attached to this GameObject.");
         orbitRadius = Vector3.Distance(transform.position, globeApproximatorSphere.transform.position);
     }
 
