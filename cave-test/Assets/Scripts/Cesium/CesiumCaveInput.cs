@@ -177,7 +177,6 @@ public class CesiumCaveInput : MonoBehaviour
         //moveInputs = Vector2.zero;
         
         Vector3 moveDirection = Vector3.zero;
-        moveInputs = new Vector2(0.2f, 0f);
         //Debug.Log("Movement vector magnitude: " + moveDirection.magnitude);
         moveDirection = transform.right * moveInputs.x + transform.up * moveInputs.y;
         float speed = RelativeSpeed();
