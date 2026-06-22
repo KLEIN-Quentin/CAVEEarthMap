@@ -13,8 +13,6 @@ public class CesiumCaveInput : MonoBehaviour
     private CesiumGeoreference CesiumGeoRef;
     [SerializeField]
     private GameObject[] Tiles;
-    //[SerializeField]
-    //private CesiumGlobeAnchor anchor;
     [SerializeField]
     private GameObject globeApproximator;
     [SerializeField]
@@ -61,25 +59,14 @@ public class CesiumCaveInput : MonoBehaviour
     private Vector2 elevateInputs = Vector2.zero;
     private float zoomUp = 0f;
     private float zoomDown = 0f;
-    private Rigidbody rb;
-    private Vector3 startPos;
-    private float orbitRadius = 0f;
 
     private bool isViewParallel = false;
 
     private void Awake()
     {
-        startPos = transform.position;
-        rb = GetComponent<Rigidbody>();
-        Debug.Assert(rb != null, "ASSERTION FAILED: A Rigidbody must be attached to this GameObject.");
-        //rb.maxLinearVelocity = 20f;
-        rb.maxAngularVelocity = 2f;
         heightThresholds.Sort();
-        speedTable.Sort();
+        //speedTable.Sort();
         Debug.Assert(heightThresholds.Count == speedTable.Count, "ASSERTION FAILED: heightThresholds and speedTable must have the same number of elements.");
-        //anchor = GetComponent<CesiumGlobeAnchor>();
-        //Debug.Assert(anchor != null, "ASSERTION FAILED: A Cesium Globe Anchor must be attached to this GameObject.");
-        orbitRadius = Vector3.Distance(transform.position, globeApproximatorSphere.transform.position);
     }
 
     private void LateUpdate()
@@ -90,13 +77,7 @@ public class CesiumCaveInput : MonoBehaviour
             ApplyRotate();
             ApplyZoom();
         }
-        //ApplyZoom();
-        //ApplyElevate();
-        //InterpolateRotationToSurface();
-        InterpolateTileSize();
         SaveCamera();
-        KeepFacingTowardsSurface();
-        KeepInOrbit();
     }
     
     public void OnMove(InputAction.CallbackContext context)
@@ -119,28 +100,7 @@ public class CesiumCaveInput : MonoBehaviour
     {
         rotateRight = context.ReadValue<float>();
     }
-    /*
-    public void OnZoom(InputAction.CallbackContext context)
-    {
-        zoomInputs = context.ReadValue<Vector2>();
-        if (zoomInputs == Vector2.zero)
-        {
-            zoomInputs = Vector2.one;
-        }
-    }
-
-    public void OnGoUp(InputAction.CallbackContext context)
-    {
-        goUp = context.ReadValue<float>();
-        Debug.Log("Left/Up pressed!");
-    }
-
-    public void OnGoDown(InputAction.CallbackContext context)
-    {
-        goDown = context.ReadValue<float>();
-        Debug.Log("Left/Down pressed!");
-    }
-    */
+    
     public void OnElevate(InputAction.CallbackContext context)
     {
         elevateInputs = context.ReadValue<Vector2>();
@@ -204,62 +164,9 @@ public class CesiumCaveInput : MonoBehaviour
 
     private void ApplyRotate()
     {
-        //CAVE.transform.Rotate(new Vector3(rotateInputs.y, rotateInputs.x, 0));
-        //rotateInputs = Vector2.zero;
-        //CAVE.transform.Rotate(Vector3.zero);
-        if (rotateLeft <= 0.001f) 
-        {
-            if (rotateRight <= 0.001f)
-            {
-                return;
-            }
-            else
-            {
-                rb.AddTorque(Vector3.up * rotateRight, ForceMode.VelocityChange);
-            }
-        }
-        else 
-        {
-            if (rotateRight <= 0.001f)
-            {
-                rb.AddTorque(Vector3.up * -rotateLeft, ForceMode.VelocityChange);
-            }
-            else
-            {
-                return;
-            }    
-        }
         
-        //Vector3 torque = new Vector3(rotateInputs.y, rotateInputs.x, 0f);
-        //Vector3 torque = transform.forward * rotateInputs.y + Vector3.up * rotateInputs.x;
-        //torque *= 5f;
-        //rb.AddTorque(torque, ForceMode.VelocityChange);
-    }
-    /*
-    private void ApplyZoom()
-    {
-        if (zoomInputs.y >= 0.5f)
-        {
-            CAVE.transform.localScale *= 1 + zoomInputs.y;
-        }        
-    }
-
-    private void ApplyElevate()
-    {
-        Vector3 elevation = new Vector3(0, goUp - goDown, 0);
-        float multiplier = ElevationSpeed();
-        elevation *= multiplier;
-        rb.AddForce(elevation, ForceMode.VelocityChange);
     }
     
-    private void ApplyElevate()
-    {
-        Vector3 elevation = new Vector3(0, elevateInputs.y, 0);
-        float multiplier = ElevationSpeed();
-        elevation *= multiplier;
-        rb.AddForce(elevation, ForceMode.VelocityChange);
-    }
-    */
     private void ApplyZoom()
     {
         if (zoomUp > 0.001f) 
@@ -298,11 +205,6 @@ public class CesiumCaveInput : MonoBehaviour
         }
     }
 
-    private float ElevationSpeed()
-    {
-        return RelativeSpeed();
-    }
-
     private float RelativeSpeed()
     {
         //return 40 * (Mathf.Abs(transform.position.y) + (float)CesiumGeoRef.height);
@@ -329,44 +231,6 @@ public class CesiumCaveInput : MonoBehaviour
         return speed;
     }
 
-    private float HeightChangeSpeed()
-    {
-        float result = RelativeSpeed() / 10f;
-        return result < 100f ? 100f : result;
-    }
-
-    private void InterpolateTileSize()
-    {
-        Vector3 startScale = Vector3.one;
-        Vector3 endScale = new Vector3(0.1f, 0.1f, 0.1f);
-        if (CesiumGeoRef.height > startThreshold && CesiumGeoRef.height < endThreshold)
-        {
-            float t = Mathf.InverseLerp(startThreshold, endThreshold, (float)CesiumGeoRef.height);
-            Vector3 newScale = Vector3.Lerp(startScale, endScale, t);
-            foreach (GameObject tile in Tiles)
-            {
-                tile.transform.localScale = newScale;
-            }
-        }
-    }
-    /*
-    private void InterpolateRotationToSurface()
-    {
-        Quaternion parallel = Quaternion.Euler(new Vector3(0, 0, 0));
-        Quaternion perpendicular = Quaternion.Euler(new Vector3(0, 0, 90));
-        if (CesiumGeoRef.height > startThreshold && CesiumGeoRef.height < endThreshold)
-        {
-            float t = Mathf.InverseLerp(startThreshold, endThreshold, (float)CesiumGeoRef.height);
-            Vector3 euler = transform.rotation.eulerAngles;
-            float zTilt = Mathf.Lerp(0f, 90f, t);
-            transform.rotation = Quaternion.Euler(0f, euler.y, zTilt);
-            //Quaternion rotation = Quaternion.Lerp(parallel, perpendicular, t);
-            //transform.rotation = new Quaternion(transform.rotation.x, transform.rotation.y, rotation.z, transform.rotation.w);
-            //transform.rotation = transform.rotation * rotation;
-            //transform.Rotate(rotation.eulerAngles);
-        }
-    }
-    */
     private IEnumerator InterpolateRotationToSurface()
     {
         float timeElapsed = 0f;
@@ -412,17 +276,6 @@ public class CesiumCaveInput : MonoBehaviour
     private void SaveCamera()
     {
         mainCam.transform.localPosition = initialCamPosition.position;
-    }
-
-    private void KeepFacingTowardsSurface()
-    {
-        //Quaternion rotate = Quaternion.LookRotation(globeApproximatorSphere.transform.position - transform.position, transform.up);
-        //rb.MoveRotation(rotate);
-    }
-
-    private void KeepInOrbit()
-    {
-
     }
 }
  
