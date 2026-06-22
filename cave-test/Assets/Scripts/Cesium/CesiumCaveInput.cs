@@ -185,8 +185,18 @@ public class CesiumCaveInput : MonoBehaviour
         Vector3 finalMove = Vector3.ProjectOnPlane(moveDirection, (transform.position - globeApproximatorSphere.transform.position));
         foreach (GameObject tile in Tiles)
         {
-            tile.transform.RotateAround(globeApproximatorSphere.transform.position, Vector3.up, moveInputs.x);
-            tile.transform.RotateAround(globeApproximatorSphere.transform.position, Vector3.right, moveInputs.y);
+            //tile.transform.RotateAround(globeApproximatorSphere.transform.position, Vector3.up, moveInputs.x);
+            //tile.transform.RotateAround(globeApproximatorSphere.transform.position, Vector3.right, moveInputs.y);
+        }
+        CesiumGeoRef.longitude -= moveInputs.x;
+        CesiumGeoRef.latitude -= moveInputs.y;
+        if (CesiumGeoRef.longitude <= -180)
+        {
+            CesiumGeoRef.longitude = 180;
+        }
+        if (CesiumGeoRef.latitude <= -90)
+        {
+            CesiumGeoRef.latitude = 90;
         }
         //rb.AddForce(finalMove, ForceMode.VelocityChange);
     }
