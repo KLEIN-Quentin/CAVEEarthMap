@@ -187,15 +187,17 @@ public class CesiumCaveInput : MonoBehaviour
             //tile.transform.RotateAround(globeApproximatorSphere.transform.position, Vector3.up, moveInputs.x);
             //tile.transform.RotateAround(globeApproximatorSphere.transform.position, Vector3.right, moveInputs.y);
         }
-        CesiumGeoRef.longitude -= moveInputs.x;
-        CesiumGeoRef.latitude -= moveInputs.y;
+        CesiumGeoRef.longitude += moveInputs.x;
+        CesiumGeoRef.latitude += moveInputs.y;
         if (CesiumGeoRef.longitude <= -180)
         {
             CesiumGeoRef.longitude = 180;
+            return;
         }
-        if (CesiumGeoRef.latitude <= -90)
+        if (CesiumGeoRef.longitude >= 180)
         {
-            CesiumGeoRef.latitude = 90;
+            CesiumGeoRef.longitude = -180;
+            return;
         }
         //rb.AddForce(finalMove, ForceMode.VelocityChange);
     }
