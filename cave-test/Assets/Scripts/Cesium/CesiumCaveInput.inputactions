@@ -16,69 +16,6 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Rotate",
-                    "type": "Value",
-                    "id": "b7779049-d16e-4193-9a82-140c6049f8f8",
-                    "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
-                },
-                {
-                    "name": "RotateLeft",
-                    "type": "Value",
-                    "id": "e73e22ce-6b8e-4660-b4f3-2f899bee086c",
-                    "expectedControlType": "Analog",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
-                },
-                {
-                    "name": "RotateRight",
-                    "type": "Value",
-                    "id": "9f8ca031-656c-4f60-8a3e-b2f3dbf66e09",
-                    "expectedControlType": "Analog",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
-                },
-                {
-                    "name": "Zoom_UNUSED",
-                    "type": "Value",
-                    "id": "2ecae058-84f0-4459-b1b3-eeb9a848748d",
-                    "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
-                },
-                {
-                    "name": "GoUp_UNUSED",
-                    "type": "Value",
-                    "id": "78effd8f-6a7f-45b6-a780-1a856b94230d",
-                    "expectedControlType": "Analog",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
-                },
-                {
-                    "name": "GoDown_UNUSED",
-                    "type": "Value",
-                    "id": "74ec434f-0f0d-4238-96e4-cd5904e95f63",
-                    "expectedControlType": "Analog",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
-                },
-                {
-                    "name": "Elevate_UNUSED",
-                    "type": "Value",
-                    "id": "724c952d-8979-4f13-922e-3e8e3bb7e3e9",
-                    "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
-                },
-                {
                     "name": "ZoomUp",
                     "type": "Value",
                     "id": "3fbf94cf-b343-47fe-860a-366c3cda5906",
@@ -95,15 +32,6 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
-                },
-                {
-                    "name": "ToggleViewMode",
-                    "type": "Button",
-                    "id": "22c31e77-5f73-4278-837d-cd30383e2054",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -120,61 +48,6 @@
                 },
                 {
                     "name": "",
-                    "id": "926b01de-cbf5-48f1-8eec-7c759963ea64",
-                    "path": "<SwitchJoyConRHID>/rightStick",
-                    "interactions": "",
-                    "processors": "StickDeadzone",
-                    "groups": "",
-                    "action": "Rotate",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "e03e1967-5ee3-4af7-91d6-68e3401dec47",
-                    "path": "<SwitchJoyConLHID>/leftTrigger",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "RotateLeft",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "b8588d05-b7ec-46bd-b8ca-ea8bed990cf4",
-                    "path": "<SwitchJoyConRHID>/rightTrigger",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "RotateRight",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "047d9377-b1b0-4cf3-8ff2-d00862357eac",
-                    "path": "<SwitchJoyConRHID>/rightStick",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Zoom_UNUSED",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "bb30f7b0-090d-4d1e-8106-ca93acbaf353",
-                    "path": "<SwitchJoyConLHID>/dpad/up",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "GoUp_UNUSED",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "d95e73a8-e00d-4bbf-9b6f-66c255472d5c",
                     "path": "<SwitchJoyConLHID>/dpad/up",
                     "interactions": "",
@@ -186,45 +59,12 @@
                 },
                 {
                     "name": "",
-                    "id": "01eefa0f-52ee-4e19-bcac-4f9ea44fa19c",
-                    "path": "<SwitchJoyConLHID>/dpad/down",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "GoDown_UNUSED",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "27a39c7a-cdd9-4943-a7f6-fb63efd6215f",
                     "path": "<SwitchJoyConLHID>/dpad/down",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "ZoomDown",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "0822e0cf-0a6b-4b05-9e6d-b7501a35f651",
-                    "path": "<SwitchJoyConRHID>/rightStick",
-                    "interactions": "",
-                    "processors": "StickDeadzone",
-                    "groups": "",
-                    "action": "Elevate_UNUSED",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "93ee9741-f05c-4faf-9fc8-203e5c774415",
-                    "path": "<SwitchJoyConRHID>/buttonEast",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "ToggleViewMode",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
