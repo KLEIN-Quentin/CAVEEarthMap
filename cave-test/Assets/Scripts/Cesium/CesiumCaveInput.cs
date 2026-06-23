@@ -48,7 +48,6 @@ public class CesiumCaveInput : MonoBehaviour
     private float negLatVel = 0f;
     private float acceleration = 0.05f;
     private float deceleration = 0.05f;
-    private Rigidbody rb;
 
 
     private void Awake()
