@@ -32,6 +32,13 @@ public class CesiumCaveInput : MonoBehaviour
     private float zoomUp = 0f;
     private float zoomDown = 0f;
     private float currentScale = 1f;
+    private float posLongitudeVelocity = 0f;
+    private float posLatitudeVelocity = 0f;
+    private float negLongitudeVelocity = 0f;
+    private float negLatitudeVelocity = 0f;
+    private float acceleration = 0.1f;
+    private float deceleration = 0.05f;
+    private Rigidbody rb;
 
 
     private void Awake()
@@ -43,6 +50,12 @@ public class CesiumCaveInput : MonoBehaviour
     {
         ApplyMove();
         ApplyZoom();
+        ApplyVelocities();
+        Debug.Log("Current positive longitude velocity = " + posLongitudeVelocity);
+        Debug.Log("Current positive latitude velocity = " + posLatitudeVelocity);
+        Debug.Log("Current negative longitude velocity = " + negLongitudeVelocity);
+        Debug.Log("Current negative latitude velocity = " + negLatitudeVelocity);
+        DecayVelocities();
         SaveCamera();
     }
     
@@ -64,17 +77,25 @@ public class CesiumCaveInput : MonoBehaviour
     private void ApplyMove()
     {
         float ratio = RelativeSpeed();
-        CesiumGeoRef.longitude += moveInputs.x / ratio;
-        CesiumGeoRef.latitude += moveInputs.y / ratio;
-        if (CesiumGeoRef.longitude <= -180)
+        float maxLongSpeed = moveInputs.x / ratio;
+        float maxLatSpeed = moveInputs.y / ratio;
+
+        if (maxLongSpeed < 0f)
         {
-            CesiumGeoRef.longitude = 180;
-            return;
+            negLongitudeVelocity = maxLongSpeed;
         }
-        if (CesiumGeoRef.longitude >= 180)
+        if (maxLongSpeed > 0f)
         {
-            CesiumGeoRef.longitude = -180;
-            return;
+            posLongitudeVelocity = maxLongSpeed;
+        }
+        
+        if (maxLatSpeed < 0f)
+        {
+            negLatitudeVelocity = maxLatSpeed;
+        }
+        if (maxLatSpeed > 0f)
+        {
+            posLatitudeVelocity = maxLatSpeed;
         }
     }
     
@@ -97,6 +118,58 @@ public class CesiumCaveInput : MonoBehaviour
             }
             globeApproximator.transform.localScale /= 1.1f;
             currentScale -= 1f;
+        }
+    }
+
+    private void ApplyVelocities()
+    {
+        CesiumGeoRef.longitude += posLongitudeVelocity + negLongitudeVelocity;
+        CesiumGeoRef.latitude += posLatitudeVelocity + negLatitudeVelocity;
+        if (CesiumGeoRef.longitude <= -180)
+        {
+            CesiumGeoRef.longitude = 180;
+            return;
+        }
+        if (CesiumGeoRef.longitude >= 180)
+        {
+            CesiumGeoRef.longitude = -180;
+            return;
+        }
+    }
+
+    private void DecayVelocities()
+    {
+        if (posLongitudeVelocity > 0)
+        {
+            posLongitudeVelocity -= deceleration;
+            if (Mathf.Abs(posLongitudeVelocity) < deceleration)
+            {
+                posLongitudeVelocity = 0;
+            }
+        }
+        if (negLongitudeVelocity < 0)
+        {
+            negLongitudeVelocity += deceleration;
+            if (Mathf.Abs(negLongitudeVelocity) < deceleration)
+            {
+                negLongitudeVelocity = 0;
+            }
+        }
+        if (posLatitudeVelocity > 0)
+        {
+            posLatitudeVelocity -= deceleration;
+            if (Mathf.Abs(posLatitudeVelocity) < deceleration)
+            {
+                posLatitudeVelocity = 0;
+            }
+        }
+        if (negLatitudeVelocity < 0)
+        {
+            negLatitudeVelocity += deceleration;
+            if (Mathf.Abs(negLatitudeVelocity) < deceleration)
+            {
+                negLatitudeVelocity = 0;
+            }
         }
     }
 
