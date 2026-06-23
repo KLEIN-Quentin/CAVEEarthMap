@@ -36,7 +36,7 @@ public class CesiumCaveInput : MonoBehaviour
     private float posLatitudeVelocity = 0f;
     private float negLongitudeVelocity = 0f;
     private float negLatitudeVelocity = 0f;
-    private float acceleration = 0.1f;
+    private float acceleration = 0.05f;
     private float deceleration = 0.05f;
     private Rigidbody rb;
 
@@ -51,10 +51,6 @@ public class CesiumCaveInput : MonoBehaviour
         ApplyMove();
         ApplyZoom();
         ApplyVelocities();
-        Debug.Log("Current positive longitude velocity = " + posLongitudeVelocity);
-        Debug.Log("Current positive latitude velocity = " + posLatitudeVelocity);
-        Debug.Log("Current negative longitude velocity = " + negLongitudeVelocity);
-        Debug.Log("Current negative latitude velocity = " + negLatitudeVelocity);
         DecayVelocities();
         SaveCamera();
     }
@@ -181,6 +177,11 @@ public class CesiumCaveInput : MonoBehaviour
         }
         float result = Mathf.Pow(currentScale, 2f) / 2f;
         return Mathf.Lerp(1f, 10000f, Mathf.InverseLerp(1f, 10000f, result));
+    }
+
+    private float ZoomSpeed()
+    {
+        return 1.1f / currentScale;
     }
 
     /// Pour une quelconque raison, la caméra attachée au CAVE tombe d'elle même
