@@ -21,11 +21,17 @@ public class CesiumCaveInput : MonoBehaviour
     [Header("Tracking")]
     [SerializeField]
     private Transform leftHand;
-
     [SerializeField]
     private GameObject mainCam;
     [SerializeField]
     private Transform initialCamPosition;
+
+    [Header("Zoom Controls")]
+    [SerializeField]
+    private float minInternalScale = -25f;
+    [SerializeField]
+    private float maxInternalScale = 160f;
+
 
     [Header("Internals")]
     private Vector2 moveInputs = Vector2.zero;
@@ -97,22 +103,31 @@ public class CesiumCaveInput : MonoBehaviour
     
     private void ApplyZoom()
     {
+        float zoomSpeed = ZoomSpeed();
         if (zoomUp > 0.001f) 
         {
+            if (currentScale >= maxInternalScale)
+            {
+                return;
+            }
             foreach (GameObject tile in Tiles)
             {
-                tile.transform.localScale *= 1.1f;
+                tile.transform.localScale *= zoomSpeed;
             }
-            globeApproximator.transform.localScale *= 1.1f;
+            globeApproximator.transform.localScale *= zoomSpeed;
             currentScale += 1f;
         }
         if (zoomDown > 0.001f)
         {
+            if (currentScale <= minInternalScale)
+            {
+                return;
+            }
             foreach (GameObject tile in Tiles)
             {
-                tile.transform.localScale /= 1.1f;
+                tile.transform.localScale /= zoomSpeed;
             }
-            globeApproximator.transform.localScale /= 1.1f;
+            globeApproximator.transform.localScale /= zoomSpeed;
             currentScale -= 1f;
         }
     }
@@ -173,15 +188,26 @@ public class CesiumCaveInput : MonoBehaviour
     {
         if (currentScale <= 1f)
         {
-            return 1f;
+            return 2f;
         }
         float result = Mathf.Pow(currentScale, 2f) / 2f;
-        return Mathf.Lerp(1f, 10000f, Mathf.InverseLerp(1f, 10000f, result));
+        return Mathf.Lerp(2f, 10000f, Mathf.InverseLerp(2f, 10000f, result));
     }
 
     private float ZoomSpeed()
     {
-        return 1.1f / currentScale;
+        if (currentScale <= 20f)
+        {
+            return 1.1f;
+        }
+        else if (currentScale <= 60f)
+        {
+            return 1.05f;
+        }
+        else
+        {
+            return 1.01f;
+        }
     }
 
     /// Pour une quelconque raison, la caméra attachée au CAVE tombe d'elle même
