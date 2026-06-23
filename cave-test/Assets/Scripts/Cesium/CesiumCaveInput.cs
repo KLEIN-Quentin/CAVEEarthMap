@@ -38,10 +38,14 @@ public class CesiumCaveInput : MonoBehaviour
     private float zoomUp = 0f;
     private float zoomDown = 0f;
     private float currentScale = 1f;
-    private float posLongitudeVelocity = 0f;
-    private float posLatitudeVelocity = 0f;
-    private float negLongitudeVelocity = 0f;
-    private float negLatitudeVelocity = 0f;
+    private float targetPosLongVel = 0f;
+    private float targetPosLatVel = 0f;
+    private float targetNegLongVel = 0f;
+    private float targetNegLatVel = 0f;
+    private float posLongVel = 0f;
+    private float posLatVel = 0f;
+    private float negLongVel = 0f;
+    private float negLatVel = 0f;
     private float acceleration = 0.05f;
     private float deceleration = 0.05f;
     private Rigidbody rb;
@@ -56,6 +60,7 @@ public class CesiumCaveInput : MonoBehaviour
     {
         ApplyMove();
         ApplyZoom();
+        Accelerate();
         ApplyVelocities();
         DecayVelocities();
         SaveCamera();
@@ -84,20 +89,20 @@ public class CesiumCaveInput : MonoBehaviour
 
         if (maxLongSpeed < 0f)
         {
-            negLongitudeVelocity = maxLongSpeed;
+            targetNegLongVel = maxLongSpeed;
         }
         if (maxLongSpeed > 0f)
         {
-            posLongitudeVelocity = maxLongSpeed;
+            targetPosLongVel = maxLongSpeed;
         }
         
         if (maxLatSpeed < 0f)
         {
-            negLatitudeVelocity = maxLatSpeed;
+            targetNegLatVel = maxLatSpeed;
         }
         if (maxLatSpeed > 0f)
         {
-            posLatitudeVelocity = maxLatSpeed;
+            targetPosLatVel = maxLatSpeed;
         }
     }
     
@@ -132,10 +137,35 @@ public class CesiumCaveInput : MonoBehaviour
         }
     }
 
+    private void Accelerate()
+    {
+        posLongVel += acceleration;
+        posLatVel += acceleration;
+        negLongVel -= acceleration;
+        negLatVel -= acceleration;
+        
+        if (posLongVel >= targetPosLongVel)
+        {
+            posLongVel = targetPosLongVel;
+        }
+        if (posLatVel >= targetPosLatVel)
+        {
+            posLatVel = targetPosLatVel;
+        }
+        if (negLongVel <= targetNegLongVel)
+        {
+            negLongVel = targetNegLongVel;
+        }
+        if (negLatVel <= targetNegLatVel)
+        {
+            negLatVel = targetNegLatVel;
+        }
+    }
+
     private void ApplyVelocities()
     {
-        CesiumGeoRef.longitude += posLongitudeVelocity + negLongitudeVelocity;
-        CesiumGeoRef.latitude += posLatitudeVelocity + negLatitudeVelocity;
+        CesiumGeoRef.longitude += posLongVel + negLongVel;
+        CesiumGeoRef.latitude += posLatVel + negLatVel;
         if (CesiumGeoRef.longitude <= -180)
         {
             CesiumGeoRef.longitude = 180;
@@ -150,36 +180,36 @@ public class CesiumCaveInput : MonoBehaviour
 
     private void DecayVelocities()
     {
-        if (posLongitudeVelocity > 0)
+        if (targetPosLongVel > 0)
         {
-            posLongitudeVelocity -= deceleration;
-            if (Mathf.Abs(posLongitudeVelocity) < deceleration)
+            targetPosLongVel -= deceleration;
+            if (Mathf.Abs(targetPosLongVel) < deceleration)
             {
-                posLongitudeVelocity = 0;
+                targetPosLongVel = 0;
             }
         }
-        if (negLongitudeVelocity < 0)
+        if (targetNegLongVel < 0)
         {
-            negLongitudeVelocity += deceleration;
-            if (Mathf.Abs(negLongitudeVelocity) < deceleration)
+            targetNegLongVel += deceleration;
+            if (Mathf.Abs(targetNegLongVel) < deceleration)
             {
-                negLongitudeVelocity = 0;
+                targetNegLongVel = 0;
             }
         }
-        if (posLatitudeVelocity > 0)
+        if (targetPosLatVel > 0)
         {
-            posLatitudeVelocity -= deceleration;
-            if (Mathf.Abs(posLatitudeVelocity) < deceleration)
+            targetPosLatVel -= deceleration;
+            if (Mathf.Abs(targetPosLatVel) < deceleration)
             {
-                posLatitudeVelocity = 0;
+                targetPosLatVel = 0;
             }
         }
-        if (negLatitudeVelocity < 0)
+        if (targetNegLatVel < 0)
         {
-            negLatitudeVelocity += deceleration;
-            if (Mathf.Abs(negLatitudeVelocity) < deceleration)
+            targetNegLatVel += deceleration;
+            if (Mathf.Abs(targetNegLatVel) < deceleration)
             {
-                negLatitudeVelocity = 0;
+                targetNegLatVel = 0;
             }
         }
     }
