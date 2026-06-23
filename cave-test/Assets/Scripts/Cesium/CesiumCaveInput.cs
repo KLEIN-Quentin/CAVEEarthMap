@@ -59,6 +59,7 @@ public class CesiumCaveInput : MonoBehaviour
     private Vector2 elevateInputs = Vector2.zero;
     private float zoomUp = 0f;
     private float zoomDown = 0f;
+    private float currentScale = 1f;
 
     private bool isViewParallel = false;
 
@@ -133,22 +134,10 @@ public class CesiumCaveInput : MonoBehaviour
 
     private void ApplyMove()
     {
-        //CAVE.transform.localPosition += new Vector3(moveInputs.x / 2, 0, moveInputs.y / 2);
-        //moveInputs = Vector2.zero;
-        
-        Vector3 moveDirection = Vector3.zero;
-        //Debug.Log("Movement vector magnitude: " + moveDirection.magnitude);
-        moveDirection = transform.right * moveInputs.x + transform.up * moveInputs.y;
-        float speed = RelativeSpeed();
-        moveDirection *= speed;
-        Vector3 finalMove = Vector3.ProjectOnPlane(moveDirection, (transform.position - globeApproximatorSphere.transform.position));
-        foreach (GameObject tile in Tiles)
-        {
-            //tile.transform.RotateAround(globeApproximatorSphere.transform.position, Vector3.up, moveInputs.x);
-            //tile.transform.RotateAround(globeApproximatorSphere.transform.position, Vector3.right, moveInputs.y);
-        }
-        CesiumGeoRef.longitude += moveInputs.x / 2;
-        CesiumGeoRef.latitude += moveInputs.y / 2;
+        float ratio = RelativeSpeed();
+        Debug.Log("Current speed ratio = " + ratio);
+        CesiumGeoRef.longitude += moveInputs.x / ratio;
+        CesiumGeoRef.latitude += moveInputs.y / ratio;
         if (CesiumGeoRef.longitude <= -180)
         {
             CesiumGeoRef.longitude = 180;
@@ -159,7 +148,6 @@ public class CesiumCaveInput : MonoBehaviour
             CesiumGeoRef.longitude = -180;
             return;
         }
-        //rb.AddForce(finalMove, ForceMode.VelocityChange);
     }
 
     private void ApplyRotate()
@@ -182,6 +170,7 @@ public class CesiumCaveInput : MonoBehaviour
                 Debug.Log("New tile scale: " + tile.transform.localScale);
             }
             globeApproximator.transform.localScale *= 1.1f;
+            currentScale += 1f;
         }
         if (zoomDown > 0.001f)
         {
@@ -196,6 +185,7 @@ public class CesiumCaveInput : MonoBehaviour
                 Debug.Log("New tile scale: " + tile.transform.localScale);
             }
             globeApproximator.transform.localScale /= 1.1f;
+            currentScale -= 1f;
         }
         if (CesiumGeoRef.height > 10000000f)
         {
@@ -208,7 +198,7 @@ public class CesiumCaveInput : MonoBehaviour
     private float RelativeSpeed()
     {
         //return 40 * (Mathf.Abs(transform.position.y) + (float)CesiumGeoRef.height);
-        float height = (float)CesiumGeoRef.height;
+        /*float height = (float)CesiumGeoRef.height;
         float speed = 1f;
         for (int i = 0; i < speedTable.Count; i++)
         {
@@ -229,6 +219,14 @@ public class CesiumCaveInput : MonoBehaviour
         }
         //Debug.Log("Current speed: " + speed);
         return speed;
+        */
+        Debug.Log("Current scale = " + currentScale);
+        if (currentScale <= 1f)
+        {
+            return 1f;
+        }
+        float result = Mathf.Pow(currentScale, 2f) / 2f;
+        return Mathf.Lerp(1f, 10000f, Mathf.InverseLerp(1f, 10000f, result));
     }
 
     private IEnumerator InterpolateRotationToSurface()
