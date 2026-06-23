@@ -135,7 +135,6 @@ public class CesiumCaveInput : MonoBehaviour
     private void ApplyMove()
     {
         float ratio = RelativeSpeed();
-        Debug.Log("Current speed ratio = " + ratio);
         CesiumGeoRef.longitude += moveInputs.x / ratio;
         CesiumGeoRef.latitude += moveInputs.y / ratio;
         if (CesiumGeoRef.longitude <= -180)
@@ -162,12 +161,9 @@ public class CesiumCaveInput : MonoBehaviour
             //CAVE.transform.localScale *= 1.1f;
             //CesiumGeoRef.height += HeightChangeSpeed();
             //anchor.longitudeLatitudeHeight = new Unity.Mathematics.double3(anchor.longitudeLatitudeHeight.x, anchor.longitudeLatitudeHeight.y, anchor.longitudeLatitudeHeight.z + HeightChangeSpeed());
-            Debug.Log("Zooming up");
             foreach (GameObject tile in Tiles)
             {
-                Debug.Log("Old tile scale: " + tile.transform.localScale);
                 tile.transform.localScale *= 1.1f;
-                Debug.Log("New tile scale: " + tile.transform.localScale);
             }
             globeApproximator.transform.localScale *= 1.1f;
             currentScale += 1f;
@@ -177,12 +173,9 @@ public class CesiumCaveInput : MonoBehaviour
             //CAVE.transform.localScale /= 1.1f;
             //CesiumGeoRef.height -= HeightChangeSpeed();
             //anchor.longitudeLatitudeHeight = new Unity.Mathematics.double3(anchor.longitudeLatitudeHeight.x, anchor.longitudeLatitudeHeight.y, anchor.longitudeLatitudeHeight.z - HeightChangeSpeed());
-            Debug.Log("Zooming down");
             foreach (GameObject tile in Tiles)
             {
-                Debug.Log("Old tile scale: " + tile.transform.localScale);
                 tile.transform.localScale /= 1.1f;
-                Debug.Log("New tile scale: " + tile.transform.localScale);
             }
             globeApproximator.transform.localScale /= 1.1f;
             currentScale -= 1f;
@@ -220,7 +213,6 @@ public class CesiumCaveInput : MonoBehaviour
         //Debug.Log("Current speed: " + speed);
         return speed;
         */
-        Debug.Log("Current scale = " + currentScale);
         if (currentScale <= 1f)
         {
             return 1f;
