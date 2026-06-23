@@ -158,9 +158,6 @@ public class CesiumCaveInput : MonoBehaviour
     {
         if (zoomUp > 0.001f) 
         {
-            //CAVE.transform.localScale *= 1.1f;
-            //CesiumGeoRef.height += HeightChangeSpeed();
-            //anchor.longitudeLatitudeHeight = new Unity.Mathematics.double3(anchor.longitudeLatitudeHeight.x, anchor.longitudeLatitudeHeight.y, anchor.longitudeLatitudeHeight.z + HeightChangeSpeed());
             foreach (GameObject tile in Tiles)
             {
                 tile.transform.localScale *= 1.1f;
@@ -170,9 +167,6 @@ public class CesiumCaveInput : MonoBehaviour
         }
         if (zoomDown > 0.001f)
         {
-            //CAVE.transform.localScale /= 1.1f;
-            //CesiumGeoRef.height -= HeightChangeSpeed();
-            //anchor.longitudeLatitudeHeight = new Unity.Mathematics.double3(anchor.longitudeLatitudeHeight.x, anchor.longitudeLatitudeHeight.y, anchor.longitudeLatitudeHeight.z - HeightChangeSpeed());
             foreach (GameObject tile in Tiles)
             {
                 tile.transform.localScale /= 1.1f;
@@ -180,39 +174,10 @@ public class CesiumCaveInput : MonoBehaviour
             globeApproximator.transform.localScale /= 1.1f;
             currentScale -= 1f;
         }
-        if (CesiumGeoRef.height > 10000000f)
-        {
-            //CesiumGeoRef.height = 10000000f;
-            //anchor.longitudeLatitudeHeight = new Unity.Mathematics.double3(anchor.longitudeLatitudeHeight.x, anchor.longitudeLatitudeHeight.y, 10000000f);
-
-        }
     }
 
     private float RelativeSpeed()
     {
-        //return 40 * (Mathf.Abs(transform.position.y) + (float)CesiumGeoRef.height);
-        /*float height = (float)CesiumGeoRef.height;
-        float speed = 1f;
-        for (int i = 0; i < speedTable.Count; i++)
-        {
-            if (height < heightThresholds[0])
-            {
-                speed = speedTable[0];
-                break;
-            }
-            if (height > heightThresholds[heightThresholds.Count - 1] || (i + 1) > speedTable.Count)
-            {
-                speed = speedTable[speedTable.Count - 1];
-                break;
-            }
-            if (heightThresholds[i] < height && height < heightThresholds[i + 1])
-            {
-                speed = speedTable[i];
-            }
-        }
-        //Debug.Log("Current speed: " + speed);
-        return speed;
-        */
         if (currentScale <= 1f)
         {
             return 1f;
