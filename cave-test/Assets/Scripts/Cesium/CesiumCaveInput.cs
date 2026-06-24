@@ -248,7 +248,7 @@ public class CesiumCaveInput : MonoBehaviour
 
     private float GetZoomSpeed()
     {
-        
+        /*
         if (currentScale <= 20f)
         {
             return 1.1f;
@@ -261,8 +261,8 @@ public class CesiumCaveInput : MonoBehaviour
         {
             return 1.01f;
         }
-        
-        //return zoomSpeedCurve.Evaluate(currentScale);
+        */
+        return zoomSpeedCurve.Evaluate(currentScale);
     }
 
     private float GetAcceleration()
