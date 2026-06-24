@@ -69,6 +69,10 @@ public class CesiumCaveInput : MonoBehaviour
         ApplyZoom();
         Accelerate();
         ApplyVelocities();
+        Debug.Log("Current moveInputs: " + moveInputs);
+        Debug.Log("Current target velocities: +long=" + targetPosLongVel
+                    + " -long=" + targetNegLongVel + " +lat=" + targetPosLatVel + " -lat=" + targetNegLatVel);
+        Debug.Log("Current velocities: +long=" + posLongVel + " -long=" + negLongVel + " +lat=" + posLatVel + " -lat=" + negLatVel);
         Decelerate();
         SaveCamera();
     }
@@ -90,9 +94,15 @@ public class CesiumCaveInput : MonoBehaviour
 
     private void ApplyMove()
     {
-        float ratio = GetMoveSpeed();
-        float maxLongSpeed = moveInputs.x / ratio;
-        float maxLatSpeed = moveInputs.y / ratio;
+        if (moveInputs == Vector2.zero)
+        {
+            Debug.Log("moveInputs are 0, not applying move");
+            return;
+        }
+        float speed = GetMoveSpeed();
+        Debug.Log("Current speed: " + speed);
+        float maxLongSpeed = moveInputs.x * speed;
+        float maxLatSpeed = moveInputs.y * speed;
 
         if (maxLongSpeed < 0f)
         {
@@ -238,7 +248,7 @@ public class CesiumCaveInput : MonoBehaviour
 
     private float GetZoomSpeed()
     {
-        /*
+        
         if (currentScale <= 20f)
         {
             return 1.1f;
@@ -251,8 +261,8 @@ public class CesiumCaveInput : MonoBehaviour
         {
             return 1.01f;
         }
-        */
-        return zoomSpeedCurve.Evaluate(currentScale);
+        
+        //return zoomSpeedCurve.Evaluate(currentScale);
     }
 
     private float GetAcceleration()
