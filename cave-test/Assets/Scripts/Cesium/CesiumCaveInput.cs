@@ -33,6 +33,16 @@ public class CesiumCaveInput : MonoBehaviour
     private float maxInternalScale = 160f;
 
 
+    [Header("Curves")]
+    [SerializeField]
+    private AnimationCurve moveSpeedCurve;
+    [SerializeField]
+    private AnimationCurve zoomSpeedCurve;
+    [SerializeField]
+    private AnimationCurve accelerationCurve;
+    [SerializeField]
+    private AnimationCurve decelerationCurve;
+
     [Header("Internals")]
     private Vector2 moveInputs = Vector2.zero;
     private float zoomUp = 0f;
@@ -46,8 +56,6 @@ public class CesiumCaveInput : MonoBehaviour
     private float posLatVel = 0f;
     private float negLongVel = 0f;
     private float negLatVel = 0f;
-    private float acceleration = 0.05f;
-    private float deceleration = 0.05f;
 
 
     private void Awake()
@@ -61,7 +69,7 @@ public class CesiumCaveInput : MonoBehaviour
         ApplyZoom();
         Accelerate();
         ApplyVelocities();
-        DecayVelocities();
+        Decelerate();
         SaveCamera();
     }
     
@@ -82,7 +90,7 @@ public class CesiumCaveInput : MonoBehaviour
 
     private void ApplyMove()
     {
-        float ratio = RelativeSpeed();
+        float ratio = GetMoveSpeed();
         float maxLongSpeed = moveInputs.x / ratio;
         float maxLatSpeed = moveInputs.y / ratio;
 
@@ -107,7 +115,7 @@ public class CesiumCaveInput : MonoBehaviour
     
     private void ApplyZoom()
     {
-        float zoomSpeed = ZoomSpeed();
+        float zoomSpeed = GetZoomSpeed();
         if (zoomUp > 0.001f) 
         {
             if (currentScale >= maxInternalScale)
@@ -138,10 +146,11 @@ public class CesiumCaveInput : MonoBehaviour
 
     private void Accelerate()
     {
-        posLongVel += acceleration;
-        posLatVel += acceleration;
-        negLongVel -= acceleration;
-        negLatVel -= acceleration;
+        float accel = GetAcceleration();
+        posLongVel += accel;
+        posLatVel += accel;
+        negLongVel -= accel;
+        negLatVel -= accel;
         
         if (posLongVel >= targetPosLongVel)
         {
@@ -177,54 +186,59 @@ public class CesiumCaveInput : MonoBehaviour
         }
     }
 
-    private void DecayVelocities()
+    private void Decelerate()
     {
+        float decel = GetDeceleration();
         if (targetPosLongVel > 0)
         {
-            targetPosLongVel -= deceleration;
-            if (Mathf.Abs(targetPosLongVel) < deceleration)
+            targetPosLongVel -= decel;
+            if (Mathf.Abs(targetPosLongVel) < decel)
             {
                 targetPosLongVel = 0;
             }
         }
         if (targetNegLongVel < 0)
         {
-            targetNegLongVel += deceleration;
-            if (Mathf.Abs(targetNegLongVel) < deceleration)
+            targetNegLongVel += decel;
+            if (Mathf.Abs(targetNegLongVel) < decel)
             {
                 targetNegLongVel = 0;
             }
         }
         if (targetPosLatVel > 0)
         {
-            targetPosLatVel -= deceleration;
-            if (Mathf.Abs(targetPosLatVel) < deceleration)
+            targetPosLatVel -= decel;
+            if (Mathf.Abs(targetPosLatVel) < decel)
             {
                 targetPosLatVel = 0;
             }
         }
         if (targetNegLatVel < 0)
         {
-            targetNegLatVel += deceleration;
-            if (Mathf.Abs(targetNegLatVel) < deceleration)
+            targetNegLatVel += decel;
+            if (Mathf.Abs(targetNegLatVel) < decel)
             {
                 targetNegLatVel = 0;
             }
         }
     }
 
-    private float RelativeSpeed()
+    private float GetMoveSpeed()
     {
+        /*
         if (currentScale <= 1f)
         {
             return 2f;
         }
         float result = Mathf.Pow(currentScale, 2f) / 2f;
         return Mathf.Lerp(2f, 10000f, Mathf.InverseLerp(2f, 10000f, result));
+        */
+        return moveSpeedCurve.Evaluate(currentScale);
     }
 
-    private float ZoomSpeed()
+    private float GetZoomSpeed()
     {
+        /*
         if (currentScale <= 20f)
         {
             return 1.1f;
@@ -237,6 +251,18 @@ public class CesiumCaveInput : MonoBehaviour
         {
             return 1.01f;
         }
+        */
+        return zoomSpeedCurve.Evaluate(currentScale);
+    }
+
+    private float GetAcceleration()
+    {
+        return accelerationCurve.Evaluate(currentScale);
+    }
+
+    private float GetDeceleration()
+    {
+        return decelerationCurve.Evaluate(currentScale);
     }
 
     /// Pour une quelconque raison, la caméra attachée au CAVE tombe d'elle même
