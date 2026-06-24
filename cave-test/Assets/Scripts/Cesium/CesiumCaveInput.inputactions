@@ -40,7 +40,7 @@
                     "id": "329f933b-ec44-4df8-9cf9-74b8fbbce371",
                     "path": "<SwitchJoyConLHID>/leftStick",
                     "interactions": "",
-                    "processors": "",
+                    "processors": "StickDeadzone",
                     "groups": "",
                     "action": "Move",
                     "isComposite": false,
