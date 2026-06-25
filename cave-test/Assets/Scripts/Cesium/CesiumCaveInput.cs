@@ -130,12 +130,12 @@ public class CesiumCaveInput : MonoBehaviour
     {
         if (string.IsNullOrEmpty(longitudeInput.text))
         {
-            Debug.LogError("Empty longitude field!");
+            Debug.LogError("Champ longitude vide!");
             return;
         }
         if (string.IsNullOrEmpty(latitudeInput.text))
         {
-            Debug.LogError("Empty latitude field!");
+            Debug.LogError("Champ latitude vide!");
             return;
         }
         bool longitudeRelative = false;
@@ -159,7 +159,7 @@ public class CesiumCaveInput : MonoBehaviour
         bool success = double.TryParse(longitudeInput.text, out destLongitude);
         if (!success)
         {
-            Debug.LogError("Invalid longitude field: must only contain digits and a dot (.)");
+            Debug.LogError("Champ longitude invalide: ne doit contenir que des chiffres, et une virgule pour la décimale (,)");
             return;
         }
         Debug.Log("Got destLongitude = " + destLongitude);
@@ -167,17 +167,17 @@ public class CesiumCaveInput : MonoBehaviour
         success = double.TryParse(latitudeInput.text, out destLatitude);
         if (!success)
         {
-            Debug.LogError("Invalid latitude field: must only contain digits and a dot (.)");
+            Debug.LogError("Champ latitude invalide: ne doit contenir que des chiffres, et une virgule pour la décimale (,)");
             return;
         }
         if (destLongitude < -180 || destLongitude > 180)
         {
-            Debug.LogError("Invalid longitude field: value must be in range [-180; 180]");
+            Debug.LogError("Champ longitude invalide: doit être dans l'intervale [-180; 180]");
             return;
         }
         if (destLatitude < -90 || destLatitude > 90)
         {
-            Debug.LogError("Invalid latitude field: value must be in range [-90; 90]");
+            Debug.LogError("Champ latitude invalide: doit être dans l'intervale [-90; 90]");
         }
         Debug.Log("Got destLatitude = " + destLatitude);
         if (longitudeRelative)
