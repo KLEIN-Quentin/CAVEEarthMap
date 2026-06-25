@@ -32,6 +32,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "LaserPoint",
+                    "type": "Button",
+                    "id": "e3bba502-d6db-4f40-8dae-08ff3b3b2dca",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -65,6 +74,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "ZoomDown",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b36cfa6a-4dba-46c3-8071-68119c269951",
+                    "path": "<SwitchJoyConLHID>/leftTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LaserPoint",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
