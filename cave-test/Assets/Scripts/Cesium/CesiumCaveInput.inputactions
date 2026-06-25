@@ -34,9 +34,18 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "LaserPoint",
+                    "name": "LeftLaserPoint",
                     "type": "Button",
                     "id": "e3bba502-d6db-4f40-8dae-08ff3b3b2dca",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "RightLaserPoint",
+                    "type": "Button",
+                    "id": "b137d82d-b428-4c00-a72a-4083cd52ff75",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -84,7 +93,18 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "LaserPoint",
+                    "action": "LeftLaserPoint",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "cc8c5322-9762-4935-8eee-d685d9e5715d",
+                    "path": "<SwitchJoyConRHID>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RightLaserPoint",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

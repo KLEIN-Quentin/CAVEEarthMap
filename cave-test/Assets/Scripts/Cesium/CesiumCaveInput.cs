@@ -18,7 +18,9 @@ public class CesiumCaveInput : MonoBehaviour
     [SerializeField]
     private GameObject globeApproximatorSphere;
     [SerializeField]
-    private GameObject laserPointer;
+    private GameObject leftLaserPointer;
+    [SerializeField]
+    private GameObject rightLaserPointer;
 
     [Header("Tracking")]
     [SerializeField]
@@ -94,15 +96,27 @@ public class CesiumCaveInput : MonoBehaviour
         zoomDown = context.ReadValue<float>();
     }
 
-    public void LaserPoint(InputAction.CallbackContext context)
+    public void LeftLaserPoint(InputAction.CallbackContext context)
     {
         if (context.performed)
         {
-            laserPointer.SetActive(true);
+            leftLaserPointer.SetActive(true);
         }
         if (context.canceled)
         {
-            laserPointer.SetActive(false);
+            leftLaserPointer.SetActive(false);
+        }
+    }
+
+    public void RightLaserPoint(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            rightLaserPointer.SetActive(true);
+        }
+        if (context.canceled)
+        {
+            rightLaserPointer.SetActive(false);
         }
     }
 
