@@ -14,10 +14,6 @@ public class CesiumCaveInput : MonoBehaviour
     [SerializeField]
     private GameObject[] Tiles;
     [SerializeField]
-    private GameObject globeApproximator;
-    [SerializeField]
-    private GameObject globeApproximatorSphere;
-    [SerializeField]
     private GameObject leftLaserPointer;
     [SerializeField]
     private GameObject rightLaserPointer;
@@ -164,7 +160,6 @@ public class CesiumCaveInput : MonoBehaviour
             {
                 tile.transform.localScale *= zoomSpeed;
             }
-            globeApproximator.transform.localScale *= zoomSpeed;
             currentScale += 1f;
         }
         if (zoomDown > 0.001f)
@@ -177,7 +172,6 @@ public class CesiumCaveInput : MonoBehaviour
             {
                 tile.transform.localScale /= zoomSpeed;
             }
-            globeApproximator.transform.localScale /= zoomSpeed;
             currentScale -= 1f;
         }
     }
