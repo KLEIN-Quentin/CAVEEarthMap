@@ -95,6 +95,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "InteractUI",
+                    "type": "Button",
+                    "id": "270b3856-aa1f-4b38-b1a8-17e3cabd9590",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -205,6 +214,17 @@
                     "processors": "StickDeadzone",
                     "groups": "",
                     "action": "Elevate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b5b8539c-e456-4b0c-8c95-a61ce50ed9b8",
+                    "path": "<SwitchJoyConRHID>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "InteractUI",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
