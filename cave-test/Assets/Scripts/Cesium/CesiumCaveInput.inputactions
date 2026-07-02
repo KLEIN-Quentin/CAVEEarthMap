@@ -50,6 +50,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "SwitchURL",
+                    "type": "Button",
+                    "id": "929d9d40-e4ff-4e11-bfb6-d1914a8863b1",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -105,6 +114,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "RightLaserPoint",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d11ba6e1-a7ae-4ae8-a825-5a090232cc12",
+                    "path": "<SwitchJoyConRHID>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SwitchURL",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

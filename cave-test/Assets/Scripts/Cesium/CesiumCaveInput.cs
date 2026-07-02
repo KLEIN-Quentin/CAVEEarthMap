@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static System.Net.WebRequestMethods;
 
 public class CesiumCaveInput : MonoBehaviour
 {
@@ -17,6 +18,8 @@ public class CesiumCaveInput : MonoBehaviour
     private GameObject leftLaserPointer;
     [SerializeField]
     private GameObject rightLaserPointer;
+    [SerializeField]
+    private CesiumWebMapTileServiceRasterOverlay TileService;
 
     [Header("Tracking")]
     [SerializeField]
@@ -90,6 +93,12 @@ public class CesiumCaveInput : MonoBehaviour
     public void OnScaleDown(InputAction.CallbackContext context)
     {
         zoomDown = context.ReadValue<float>();
+    }
+
+    public void SwitchURL(InputAction.CallbackContext context)
+    {
+        TileService.baseUrl = "https://basemap.nationalmap.gov/arcgis/rest/services/USGSHydroCached/MapServer/WMTS";
+        TileService.layer = "USGSHydroCached";
     }
 
     public void LeftLaserPoint(InputAction.CallbackContext context)
@@ -179,6 +188,7 @@ public class CesiumCaveInput : MonoBehaviour
     private void Accelerate()
     {
         float accel = GetAcceleration();
+        Debug.Log("Current acceleration: " + accel);
         posLongVel += accel;
         posLatVel += accel;
         negLongVel -= accel;
@@ -221,6 +231,7 @@ public class CesiumCaveInput : MonoBehaviour
     private void Decelerate()
     {
         float decel = GetDeceleration();
+        Debug.Log("Current decelration: " + decel);
         if (targetPosLongVel > 0)
         {
             targetPosLongVel -= decel;
