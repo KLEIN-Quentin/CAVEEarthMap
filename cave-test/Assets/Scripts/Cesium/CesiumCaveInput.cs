@@ -59,6 +59,8 @@ public class CesiumCaveInput : MonoBehaviour
     private float posLatVel = 0f;
     private float negLongVel = 0f;
     private float negLatVel = 0f;
+    [SerializeField]
+    private bool DebugLogs = false;
 
 
     private void Awake()
@@ -72,10 +74,13 @@ public class CesiumCaveInput : MonoBehaviour
         ApplyZoom();
         Accelerate();
         ApplyVelocities();
-        Debug.Log("Current moveInputs: " + moveInputs);
-        Debug.Log("Current target velocities: +long=" + targetPosLongVel
-                    + " -long=" + targetNegLongVel + " +lat=" + targetPosLatVel + " -lat=" + targetNegLatVel);
-        Debug.Log("Current velocities: +long=" + posLongVel + " -long=" + negLongVel + " +lat=" + posLatVel + " -lat=" + negLatVel);
+        if (DebugLogs)
+        {
+            Debug.Log("Current moveInputs: " + moveInputs);
+            Debug.Log("Current target velocities: +long=" + targetPosLongVel
+                        + " -long=" + targetNegLongVel + " +lat=" + targetPosLatVel + " -lat=" + targetNegLatVel);
+            Debug.Log("Current velocities: +long=" + posLongVel + " -long=" + negLongVel + " +lat=" + posLatVel + " -lat=" + negLatVel);
+        }
         Decelerate();
         SaveCamera();
     }
@@ -129,11 +134,13 @@ public class CesiumCaveInput : MonoBehaviour
     {
         if (moveInputs == Vector2.zero)
         {
-            Debug.Log("moveInputs are 0, not applying move");
+            if (DebugLogs)
+                Debug.Log("moveInputs are 0, not applying move");
             return;
         }
         float speed = GetMoveSpeed();
-        Debug.Log("Current speed: " + speed);
+        if (DebugLogs)
+            Debug.Log("Current speed: " + speed);
         float maxLongSpeed = moveInputs.x * speed;
         float maxLatSpeed = moveInputs.y * speed;
 
@@ -188,7 +195,8 @@ public class CesiumCaveInput : MonoBehaviour
     private void Accelerate()
     {
         float accel = GetAcceleration();
-        Debug.Log("Current acceleration: " + accel);
+        if (DebugLogs)
+            Debug.Log("Current acceleration: " + accel);
         posLongVel += accel;
         posLatVel += accel;
         negLongVel -= accel;
@@ -231,7 +239,8 @@ public class CesiumCaveInput : MonoBehaviour
     private void Decelerate()
     {
         float decel = GetDeceleration();
-        Debug.Log("Current decelration: " + decel);
+        if (DebugLogs)
+            Debug.Log("Current decelration: " + decel);
         if (targetPosLongVel > 0)
         {
             targetPosLongVel -= decel;
